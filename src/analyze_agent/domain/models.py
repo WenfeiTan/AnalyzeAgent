@@ -232,6 +232,11 @@ class ChangeSummary(ContractModel):
     changes: list[RequirementChange] = Field(default_factory=list)
 
 
+class RequirementUpdateSignals(ContractModel):
+    full_requirement: str = Field(min_length=1)
+    changes: list[RequirementChange] = Field(default_factory=list)
+
+
 class ProcessingTrace(ContractModel):
     prompt_version: str
     model: str

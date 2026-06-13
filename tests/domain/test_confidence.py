@@ -90,7 +90,19 @@ def test_mapping_requires_verified_evidence() -> None:
         ConfidenceSignals(kind=SuggestionKind.MAPPING)
 
 
+def test_user_confirmed_mapping_is_medium_confidence() -> None:
+    confidence = calculate_confidence(
+        ConfidenceSignals(
+            kind=SuggestionKind.MAPPING,
+            user_confirmed=True,
+        )
+    )
+
+    assert confidence is not None
+    assert confidence.score == 0.8
+    assert confidence.level is ConfidenceLevel.MEDIUM
+
+
 def test_keyword_requires_exactly_one_strength() -> None:
     with pytest.raises(ValidationError, match="exactly one"):
         ConfidenceSignals(kind=SuggestionKind.KEYWORD)
-

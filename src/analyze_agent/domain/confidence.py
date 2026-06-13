@@ -49,8 +49,13 @@ class ConfidenceSignals(BaseModel):
 
     @model_validator(mode="after")
     def validate_base_signal(self) -> ConfidenceSignals:
-        if self.kind is SuggestionKind.MAPPING and not self.verified_success_case:
-            raise ValueError("mapping confidence requires a verified success case")
+        if self.kind is SuggestionKind.MAPPING and not (
+            self.verified_success_case or self.user_confirmed
+        ):
+            raise ValueError(
+                "mapping confidence requires a verified success case "
+                "or user confirmation"
+            )
         if self.kind is SuggestionKind.FIELD and not self.explicit_requirement:
             raise ValueError("field confidence requires an explicit requirement signal")
         if self.kind is SuggestionKind.KEYWORD:
@@ -89,7 +94,9 @@ def calculate_confidence(
 
 def _base_score(signals: ConfidenceSignals, policy: ConfidencePolicy) -> float:
     if signals.kind is SuggestionKind.MAPPING:
-        return policy.verified_mapping_base
+        if signals.verified_success_case:
+            return policy.verified_mapping_base
+        return policy.explicit_field_base
     if signals.kind is SuggestionKind.FIELD:
         return policy.explicit_field_base
     if signals.core_keyword:
@@ -106,4 +113,3 @@ def _level_for_score(
     if score >= policy.medium_threshold:
         return ConfidenceLevel.MEDIUM
     return ConfidenceLevel.LOW
-
