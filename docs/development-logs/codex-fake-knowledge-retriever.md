@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-14 00:25 Asia/Shanghai
 - Completed: 2026-06-14 00:27 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 00:28 Asia/Shanghai
 - Base commit: `75fe158`
-- Final commit:
+- Final commit: `81fad5a`
 
 ## Objective
 
@@ -41,6 +41,14 @@ Provide deterministic fake Knowledge Base retrieval for all planned development 
 - Evidence: `make test` passed 35 tests; Ruff and diff checks passed.
 - Decision: Unknown queries return empty chunks; fixture shape remains explicitly internal.
 - Next: Commit and merge, then implement initial analysis.
+
+### 2026-06-14 00:28 Asia/Shanghai
+
+- Action: Committed and squash-merged the branch into `main`.
+- Result: Fake Knowledge Base scenarios are available on `main`.
+- Evidence: Main commit `81fad5a`.
+- Decision: Use the fake adapter as the initial-analysis retriever dependency.
+- Next: Create `codex/initial-analysis`.
 
 ## Files Changed
 

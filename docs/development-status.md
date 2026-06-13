@@ -4,16 +4,16 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 00:27 Asia/Shanghai
-- Current branch: `codex/fake-knowledge-retriever`
-- Current HEAD: `75fe158`
-- Current status: `completed`
-- Progress: `4/10` currently applicable branches merged
-- Current objective: Merge the completed fake Knowledge Base retriever.
-- Recently completed: Injectable fake adapter and empty/full/partial/no-evidence/timeout/invalid fixtures.
-- Next action: Commit and squash-merge `codex/fake-knowledge-retriever`, then create `codex/initial-analysis`.
+- Last updated: 2026-06-14 00:28 Asia/Shanghai
+- Current branch: `main`
+- Current HEAD: `81fad5a`
+- Current status: `pending`
+- Progress: `5/10` currently applicable branches merged
+- Current objective: Implement the initial requirement analysis workflow.
+- Recently completed: `codex/fake-knowledge-retriever` squash-merged into `main` at `81fad5a`.
+- Next action: Create `codex/initial-analysis` and its branch log.
 - Blockers: None.
-- Working tree note: Fake retriever is complete and awaiting commit.
+- Working tree note: Updating post-merge progress metadata.
 - Last verification: 35 tests passed; Ruff and diff checks passed.
 - Last verification: 27 tests passed; Ruff and diff checks passed.
 - Last verification: 23 tests passed; Ruff, diff check, and configuration check passed.
@@ -26,7 +26,7 @@
 | 2 | `codex/domain-contracts` | `merged` | Typed schemas and confidence rules |
 | 3 | `codex/sqlite-revisions` | `merged` | Requirement and immutable revision storage |
 | 4 | `codex/knowledge-retriever-contract` | `merged` | Stable `text -> chunks` port |
-| 5 | `codex/fake-knowledge-retriever` | `completed` | Fake payloads and failure scenarios |
+| 5 | `codex/fake-knowledge-retriever` | `merged` | Fake payloads and failure scenarios |
 | 6 | `codex/initial-analysis` | `pending` | Initial requirement analysis workflow |
 | 7 | `codex/knowledge-reuse` | `pending` | Chunk evidence and mapping reuse |
 | 8 | `codex/update-analysis` | `pending` | Feedback-driven requirement revision |
@@ -64,3 +64,4 @@
 - Merged the retriever contract into `main` at `9d84856`; progress is now 4/10.
 - Started `codex/fake-knowledge-retriever` from `main@75fe158`.
 - Completed the fake retriever with 35 passing tests.
+- Merged the fake retriever into `main` at `81fad5a`; progress is now 5/10.
