@@ -10,11 +10,17 @@ from analyze_agent.application.errors import UnsupportedRequirementLanguage
 from analyze_agent.application.initial_analysis import InitialAnalysisService
 from analyze_agent.domain.models import (
     AnalyzedRequirement,
+    AssetReference,
+    AttributeReference,
     FieldAnalysisSignal,
     InitialAnalysisRequest,
     KeywordAnalysisSignal,
     KeywordStrength,
+    KnowledgeChunk,
+    KnowledgeMappingCandidate,
+    KnowledgeReuseSignals,
     RequirementAnalysisSignals,
+    SourceAttributeMapping,
 )
 from analyze_agent.persistence.sqlite_repository import SQLiteRequirementRepository
 from analyze_agent.ports.retriever_errors import KnowledgeRetrievalTimeout
@@ -49,6 +55,31 @@ class StubAnalyzer:
         )
 
 
+class StubReconstructor:
+    async def reconstruct(self, **kwargs) -> KnowledgeReuseSignals:
+        return KnowledgeReuseSignals(
+            candidates=[
+                KnowledgeMappingCandidate(
+                    field_name="ADC_entity_country",
+                    sources=[
+                        SourceAttributeMapping(
+                            attribute=AttributeReference(
+                                attribute_name="entity_country"
+                            ),
+                            asset=AssetReference(asset_name="adc_entity"),
+                        )
+                    ],
+                    supporting_chunk_ids=["success-case-001"],
+                    success_case_confirmed=True,
+                    intent_match=True,
+                    domain_compatible=True,
+                    business_definition_compatible=True,
+                    rationale="Previously successful mapping.",
+                )
+            ]
+        )
+
+
 @pytest.fixture
 def repository(tmp_path) -> SQLiteRequirementRepository:
     result = SQLiteRequirementRepository(tmp_path / "initial.sqlite3")
@@ -59,6 +90,7 @@ def repository(tmp_path) -> SQLiteRequirementRepository:
 def _service(
     repository: SQLiteRequirementRepository,
     retriever: FakeKnowledgeBaseRetriever | None = None,
+    reconstructor=None,
 ) -> InitialAnalysisService:
     return InitialAnalysisService(
         analyzer=StubAnalyzer(),
@@ -66,6 +98,7 @@ def _service(
         repository=repository,
         model="gemini-test",
         prompt_version="analyze-requirement-v1",
+        knowledge_reconstructor=reconstructor,
     )
 
 
@@ -111,6 +144,36 @@ def test_initial_analysis_degrades_when_retrieval_times_out(
     assert response.warnings == ["Knowledge Base retrieval timed out."]
 
 
+def test_initial_analysis_includes_verified_reused_mapping(
+    repository: SQLiteRequirementRepository,
+) -> None:
+    retriever = FakeKnowledgeBaseRetriever(
+        default_scenario=FakeRetrievalScenario(
+            chunks=(
+                KnowledgeChunk(
+                    chunk_id="success-case-001",
+                    text=(
+                        "Successful ADC_entity_country mapping uses "
+                        "entity_country on adc_entity."
+                    ),
+                    metadata={"case_status": "success"},
+                ),
+            )
+        )
+    )
+
+    response = asyncio.run(
+        _service(repository, retriever, StubReconstructor())
+        .analyze_initial(
+            InitialAnalysisRequest(requirement="Build an ADC review GDA.")
+        )
+    )
+
+    assert response.reused_mappings[0].field_name == "ADC_entity_country"
+    assert response.reused_mappings[0].priority == 1
+    assert response.clear_fields[0].priority == 2
+
+
 def test_initial_analysis_rejects_non_english_requirement(
     repository: SQLiteRequirementRepository,
 ) -> None:
@@ -119,4 +182,3 @@ def test_initial_analysis_rejects_non_english_requirement(
             _service(repository)
             .analyze_initial(InitialAnalysisRequest(requirement="构建一个GDA"))
         )
-

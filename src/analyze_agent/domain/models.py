@@ -190,6 +190,23 @@ class SourceAttributeMapping(ContractModel):
     asset: AssetReference
 
 
+class KnowledgeMappingCandidate(ContractModel):
+    field_name: str = Field(min_length=1)
+    business_definition: str | None = None
+    sources: list[SourceAttributeMapping] = Field(default_factory=list)
+    supporting_chunk_ids: list[str] = Field(default_factory=list)
+    success_case_confirmed: bool
+    intent_match: bool
+    domain_compatible: bool
+    business_definition_compatible: bool
+    context_conflict: bool = False
+    rationale: str = Field(min_length=1)
+
+
+class KnowledgeReuseSignals(ContractModel):
+    candidates: list[KnowledgeMappingCandidate] = Field(default_factory=list)
+
+
 class ReusedMapping(ContractModel):
     mapping_id: UUID = Field(default_factory=uuid4)
     field_name: str = Field(min_length=1)
@@ -261,4 +278,3 @@ class KnowledgeChunk(ContractModel):
     text: str = Field(min_length=1)
     similarity_score: float | None = Field(default=None, ge=0.0, le=1.0)
     metadata: dict[str, Any] = Field(default_factory=dict)
-

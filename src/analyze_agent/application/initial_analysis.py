@@ -6,6 +6,7 @@ import re
 from time import perf_counter
 from uuid import uuid4
 
+from analyze_agent.application.knowledge_reuse import build_reused_mappings
 from analyze_agent.application.language import validate_english_text
 from analyze_agent.domain.confidence import (
     ConfidenceSignals,
@@ -21,10 +22,13 @@ from analyze_agent.domain.models import (
     KeywordAnalysisSignal,
     KeywordStrength,
     KeywordSuggestion,
+    KnowledgeChunk,
     ProcessingTrace,
     SuggestionOrigin,
 )
+from analyze_agent.ports.knowledge_reconstructor import KnowledgeReconstructor
 from analyze_agent.ports.knowledge_retriever import KnowledgeBaseRetriever
+from analyze_agent.ports.reconstructor_errors import KnowledgeReconstructionError
 from analyze_agent.ports.requirement_analyzer import RequirementAnalyzer
 from analyze_agent.ports.requirement_repository import RequirementRepository
 from analyze_agent.ports.retriever_errors import KnowledgeRetrievalError
@@ -41,12 +45,14 @@ class InitialAnalysisService:
         repository: RequirementRepository,
         model: str,
         prompt_version: str,
+        knowledge_reconstructor: KnowledgeReconstructor | None = None,
     ) -> None:
         self._analyzer = analyzer
         self._retriever = retriever
         self._repository = repository
         self._model = model
         self._prompt_version = prompt_version
+        self._knowledge_reconstructor = knowledge_reconstructor
 
     async def analyze_initial(
         self,
@@ -58,11 +64,31 @@ class InitialAnalysisService:
         signals = await self._analyzer.analyze(request.requirement)
         knowledge_query = request.requirement
         warnings: list[str] = []
+        chunks: list[KnowledgeChunk] = []
         try:
-            await self._retriever.search(knowledge_query)
+            chunks = await self._retriever.search(knowledge_query)
         except KnowledgeRetrievalError as error:
             warnings.append(str(error))
 
+        reused_mappings = []
+        if chunks and self._knowledge_reconstructor is not None:
+            try:
+                reuse_signals = await self._knowledge_reconstructor.reconstruct(
+                    requirement=request.requirement,
+                    analyzed_requirement=signals.analyzed_requirement,
+                    chunks=chunks,
+                )
+                reused_mappings = build_reused_mappings(
+                    candidates=reuse_signals.candidates,
+                    chunks=chunks,
+                    negative_constraints=(
+                        signals.analyzed_requirement.negative_constraints
+                    ),
+                )
+            except KnowledgeReconstructionError as error:
+                warnings.append(str(error))
+
+        clear_field_priority_start = len(reused_mappings) + 1
         clear_fields = [
             ClearFieldSuggestion(
                 name=field.name,
@@ -73,7 +99,7 @@ class InitialAnalysisService:
                     )
                 ),
                 origin=SuggestionOrigin.EXPLICIT_REQUIREMENT,
-                priority=index,
+                priority=clear_field_priority_start + index,
                 normalized_terms=field.normalized_terms
                 or [_normalize_field(field.name)],
                 evidence=[
@@ -85,10 +111,10 @@ class InitialAnalysisService:
                 ],
                 rationale="Field name is explicitly stated in the requirement.",
             )
-            for index, field in enumerate(signals.clear_fields, start=1)
+            for index, field in enumerate(signals.clear_fields)
         ]
 
-        keyword_priority_start = len(clear_fields) + 1
+        keyword_priority_start = len(reused_mappings) + len(clear_fields) + 1
         keywords = [
             _build_keyword(
                 keyword,
@@ -106,6 +132,7 @@ class InitialAnalysisService:
             analyzed_requirement=signals.analyzed_requirement,
             clear_fields=clear_fields,
             keywords=keywords,
+            reused_mappings=reused_mappings,
             warnings=[*signals.ambiguities, *warnings],
             trace=ProcessingTrace(
                 prompt_version=self._prompt_version,
@@ -158,4 +185,3 @@ def _required_confidence(signals: ConfidenceSignals):
 
 def _normalize_field(name: str) -> str:
     return _NORMALIZE_SEPARATOR.sub("_", name.strip()).lower()
-
