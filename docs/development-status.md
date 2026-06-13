@@ -4,24 +4,24 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 00:08 Asia/Shanghai
-- Current branch: `main`
-- Current HEAD: `9b22dd4`
-- Current status: `pending`
+- Last updated: 2026-06-14 00:13 Asia/Shanghai
+- Current branch: `codex/domain-contracts`
+- Current HEAD: `f6d7333`
+- Current status: `completed`
 - Progress: `1/10` currently applicable branches merged
-- Current objective: Begin typed domain contracts and confidence rules.
-- Recently completed: `codex/bootstrap-adk-python` squash-merged into `main` at `9b22dd4`.
-- Next action: Create `codex/domain-contracts` and its branch log.
+- Current objective: Merge the completed domain contracts into `main`.
+- Recently completed: Strict Pydantic contracts, Gemini-safe analysis signals, and deterministic confidence engine.
+- Next action: Commit and squash-merge `codex/domain-contracts`, then create `codex/sqlite-revisions`.
 - Blockers: None.
-- Working tree note: Updating post-merge progress metadata.
-- Last verification: 4 tests passed; Ruff passed; env/smoke checks passed with placeholder key; missing-key check failed clearly as expected.
+- Working tree note: Domain contracts are complete and awaiting commit.
+- Last verification: 18 tests passed; Ruff, diff check, and JSON Schema smoke checks passed.
 
 ## Branch Status
 
 | Order | Branch | Status | Summary |
 | --- | --- | --- | --- |
 | 1 | `codex/bootstrap-adk-python` | `merged` | Python, ADK, Gemini, config and test skeleton |
-| 2 | `codex/domain-contracts` | `pending` | Typed schemas and confidence rules |
+| 2 | `codex/domain-contracts` | `completed` | Typed schemas and confidence rules |
 | 3 | `codex/sqlite-revisions` | `pending` | Requirement and immutable revision storage |
 | 4 | `codex/knowledge-retriever-contract` | `pending` | Stable `text -> chunks` port |
 | 5 | `codex/fake-knowledge-retriever` | `pending` | Fake payloads and failure scenarios |
@@ -51,3 +51,5 @@
 - Committed planning baseline `2e866ca` and started `codex/bootstrap-adk-python`.
 - Completed `codex/bootstrap-adk-python`; 4 tests and all bootstrap checks passed.
 - Merged bootstrap into `main` at `9b22dd4`; progress is now 1/10.
+- Started `codex/domain-contracts` from `main@f6d7333`.
+- Completed domain contracts with 18 passing tests.
