@@ -4,16 +4,16 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 00:38 Asia/Shanghai
-- Current branch: `codex/knowledge-reuse`
-- Current HEAD: `3f59c81`
-- Current status: `completed`
-- Progress: `6/10` currently applicable branches merged
-- Current objective: Merge the completed evidence-bound knowledge reuse.
-- Recently completed: Reconstruction contracts, Gemini adapter, deterministic evidence validation, verified mapping output, and priority integration.
-- Next action: Commit and squash-merge `codex/knowledge-reuse`, then create `codex/update-analysis`.
+- Last updated: 2026-06-14 00:39 Asia/Shanghai
+- Current branch: `main`
+- Current HEAD: `c6f1309`
+- Current status: `pending`
+- Progress: `7/10` currently applicable branches merged
+- Current objective: Implement feedback-driven updated requirement analysis.
+- Recently completed: `codex/knowledge-reuse` squash-merged into `main` at `c6f1309`.
+- Next action: Create `codex/update-analysis` and its branch log.
 - Blockers: None.
-- Working tree note: Knowledge reuse is complete and awaiting commit.
+- Working tree note: Updating post-merge progress metadata.
 - Last verification: 48 tests passed; Ruff and diff checks passed.
 - Last verification: 40 tests passed; Ruff and diff checks passed.
 - Last verification: 35 tests passed; Ruff and diff checks passed.
@@ -30,7 +30,7 @@
 | 4 | `codex/knowledge-retriever-contract` | `merged` | Stable `text -> chunks` port |
 | 5 | `codex/fake-knowledge-retriever` | `merged` | Fake payloads and failure scenarios |
 | 6 | `codex/initial-analysis` | `merged` | Initial requirement analysis workflow |
-| 7 | `codex/knowledge-reuse` | `completed` | Chunk evidence and mapping reuse |
+| 7 | `codex/knowledge-reuse` | `merged` | Chunk evidence and mapping reuse |
 | 8 | `codex/update-analysis` | `pending` | Feedback-driven requirement revision |
 | 9 | `codex/adk-integration` | `pending` | ADK operations and injected retriever tool |
 | 10 | `codex/observability-hardening` | `pending` | Logging, tracing, resilience and security |
@@ -72,3 +72,4 @@
 - Merged initial analysis into `main` at `8100670`; progress is now 6/10.
 - Started `codex/knowledge-reuse` from `main@3f59c81`.
 - Completed evidence-bound knowledge reuse with 48 passing tests.
+- Merged knowledge reuse into `main` at `c6f1309`; progress is now 7/10.

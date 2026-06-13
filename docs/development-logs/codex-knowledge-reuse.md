@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-14 00:35 Asia/Shanghai
 - Completed: 2026-06-14 00:38 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 00:39 Asia/Shanghai
 - Base commit: `3f59c81`
-- Final commit:
+- Final commit: `c6f1309`
 
 ## Objective
 
@@ -42,6 +42,14 @@ Reconstruct and reuse field-to-attribute-to-asset mappings only when supported b
 - Evidence: `make test` passed 48 tests; Ruff and diff checks passed.
 - Decision: Partial and rejected candidates are omitted rather than converted into speculative source hints.
 - Next: Commit and merge, then implement updated analysis and feedback.
+
+### 2026-06-14 00:39 Asia/Shanghai
+
+- Action: Committed and squash-merged the branch into `main`.
+- Result: Verified knowledge mapping reuse is available on `main`.
+- Evidence: Main commit `c6f1309`.
+- Decision: Use persisted output and feedback as inputs to the update workflow.
+- Next: Create `codex/update-analysis`.
 
 ## Files Changed
 
