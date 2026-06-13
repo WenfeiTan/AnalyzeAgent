@@ -4,16 +4,16 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 00:13 Asia/Shanghai
-- Current branch: `codex/domain-contracts`
-- Current HEAD: `f6d7333`
-- Current status: `completed`
-- Progress: `1/10` currently applicable branches merged
-- Current objective: Merge the completed domain contracts into `main`.
-- Recently completed: Strict Pydantic contracts, Gemini-safe analysis signals, and deterministic confidence engine.
-- Next action: Commit and squash-merge `codex/domain-contracts`, then create `codex/sqlite-revisions`.
+- Last updated: 2026-06-14 00:14 Asia/Shanghai
+- Current branch: `main`
+- Current HEAD: `a6958cd`
+- Current status: `pending`
+- Progress: `2/10` currently applicable branches merged
+- Current objective: Begin code-managed SQLite requirement revisions.
+- Recently completed: `codex/domain-contracts` squash-merged into `main` at `a6958cd`.
+- Next action: Create `codex/sqlite-revisions` and its branch log.
 - Blockers: None.
-- Working tree note: Domain contracts are complete and awaiting commit.
+- Working tree note: Updating post-merge progress metadata.
 - Last verification: 18 tests passed; Ruff, diff check, and JSON Schema smoke checks passed.
 
 ## Branch Status
@@ -21,7 +21,7 @@
 | Order | Branch | Status | Summary |
 | --- | --- | --- | --- |
 | 1 | `codex/bootstrap-adk-python` | `merged` | Python, ADK, Gemini, config and test skeleton |
-| 2 | `codex/domain-contracts` | `completed` | Typed schemas and confidence rules |
+| 2 | `codex/domain-contracts` | `merged` | Typed schemas and confidence rules |
 | 3 | `codex/sqlite-revisions` | `pending` | Requirement and immutable revision storage |
 | 4 | `codex/knowledge-retriever-contract` | `pending` | Stable `text -> chunks` port |
 | 5 | `codex/fake-knowledge-retriever` | `pending` | Fake payloads and failure scenarios |
@@ -53,3 +53,4 @@
 - Merged bootstrap into `main` at `9b22dd4`; progress is now 1/10.
 - Started `codex/domain-contracts` from `main@f6d7333`.
 - Completed domain contracts with 18 passing tests.
+- Merged domain contracts into `main` at `a6958cd`; progress is now 2/10.

@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-14 00:09 Asia/Shanghai
 - Completed: 2026-06-14 00:13 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 00:14 Asia/Shanghai
 - Base commit: `f6d7333`
-- Final commit:
+- Final commit: `a6958cd`
 
 ## Objective
 
@@ -43,6 +43,14 @@ Define strict first-version domain contracts and deterministic confidence rules.
 - Evidence: `make test` passed 18 tests; `make lint` and `git diff --check` passed; main schemas generate JSON Schema.
 - Decision: Keep generated IDs, priorities, and final confidence outside Gemini signal models.
 - Next: Commit and squash-merge the branch, then start SQLite revisions.
+
+### 2026-06-14 00:14 Asia/Shanghai
+
+- Action: Committed and squash-merged the branch into `main`.
+- Result: Domain contracts and confidence rules are available on `main`.
+- Evidence: Main commit `a6958cd`.
+- Decision: Continue with code-managed SQLite revisions.
+- Next: Create `codex/sqlite-revisions`.
 
 ## Files Changed
 
