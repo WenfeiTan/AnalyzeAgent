@@ -5,9 +5,11 @@ from __future__ import annotations
 from typing import Any
 
 from google import genai
-from google.genai import types
-from pydantic import ValidationError
 
+from analyze_agent.adapters.gemini_structured import (
+    StructuredOutputError,
+    generate_structured,
+)
 from analyze_agent.domain.models import RequirementAnalysisSignals
 from analyze_agent.ports.analyzer_errors import RequirementAnalysisError
 
@@ -34,29 +36,23 @@ class GeminiRequirementAnalyzer:
         api_key: str,
         model: str,
         client: Any | None = None,
+        repair_attempts: int = 1,
     ) -> None:
         self.model = model
         self._client = client or genai.Client(api_key=api_key)
+        self._repair_attempts = repair_attempts
 
     async def analyze(self, requirement: str) -> RequirementAnalysisSignals:
         try:
-            response = await self._client.aio.models.generate_content(
+            return await generate_structured(
+                client=self._client,
                 model=self.model,
                 contents=requirement,
-                config=types.GenerateContentConfig(
-                    system_instruction=_SYSTEM_INSTRUCTION,
-                    temperature=0,
-                    response_mime_type="application/json",
-                    response_schema=RequirementAnalysisSignals,
-                ),
+                system_instruction=_SYSTEM_INSTRUCTION,
+                schema=RequirementAnalysisSignals,
+                repair_attempts=self._repair_attempts,
             )
-            if isinstance(response.parsed, RequirementAnalysisSignals):
-                return response.parsed
-            if response.parsed is not None:
-                return RequirementAnalysisSignals.model_validate(response.parsed)
-            if response.text:
-                return RequirementAnalysisSignals.model_validate_json(response.text)
-        except (ValidationError, ValueError, TypeError) as error:
+        except StructuredOutputError as error:
             raise RequirementAnalysisError(
                 f"Gemini returned invalid requirement analysis: {error}",
                 retryable=False,
@@ -66,9 +62,3 @@ class GeminiRequirementAnalyzer:
                 f"Gemini requirement analysis failed: {error}",
                 retryable=True,
             ) from error
-
-        raise RequirementAnalysisError(
-            "Gemini returned no structured requirement analysis.",
-            retryable=False,
-        )
-

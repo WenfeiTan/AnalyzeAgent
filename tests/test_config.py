@@ -15,6 +15,10 @@ def test_settings_use_safe_defaults_without_runtime_key(
     monkeypatch.delenv("ANALYZE_AGENT_MODEL", raising=False)
     monkeypatch.delenv("ANALYZE_AGENT_LOG_LEVEL", raising=False)
     monkeypatch.delenv("ANALYZE_AGENT_DATABASE_PATH", raising=False)
+    monkeypatch.delenv("ANALYZE_AGENT_MODEL_TIMEOUT_SECONDS", raising=False)
+    monkeypatch.delenv("ANALYZE_AGENT_RETRIEVER_TIMEOUT_SECONDS", raising=False)
+    monkeypatch.delenv("ANALYZE_AGENT_MAX_ATTEMPTS", raising=False)
+    monkeypatch.delenv("ANALYZE_AGENT_SCHEMA_REPAIR_ATTEMPTS", raising=False)
 
     settings = load_settings(require_api_key=False)
 
@@ -22,6 +26,10 @@ def test_settings_use_safe_defaults_without_runtime_key(
     assert settings.model == DEFAULT_MODEL
     assert settings.log_level == "INFO"
     assert settings.database_path == DEFAULT_DATABASE_PATH
+    assert settings.model_timeout_seconds == 30.0
+    assert settings.retriever_timeout_seconds == 10.0
+    assert settings.max_attempts == 2
+    assert settings.schema_repair_attempts == 1
 
 
 def test_runtime_settings_require_gemini_api_key(
@@ -37,4 +45,13 @@ def test_invalid_log_level_is_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ANALYZE_AGENT_LOG_LEVEL", "verbose")
 
     with pytest.raises(ConfigurationError, match="ANALYZE_AGENT_LOG_LEVEL"):
+        load_settings(require_api_key=False)
+
+
+def test_invalid_retry_configuration_is_rejected(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("ANALYZE_AGENT_MAX_ATTEMPTS", "0")
+
+    with pytest.raises(ConfigurationError, match="greater than zero"):
         load_settings(require_api_key=False)

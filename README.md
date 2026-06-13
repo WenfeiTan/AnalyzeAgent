@@ -33,3 +33,6 @@ The ADK root agent exposes:
 
 Until the real vector-mcp contract is available, the runtime binds
 `search_knowledge_base` to `FakeKnowledgeBaseRetriever`.
+
+Operational configuration and failure behavior are documented in
+[`docs/runbook.md`](docs/runbook.md).

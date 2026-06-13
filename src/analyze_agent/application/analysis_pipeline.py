@@ -31,6 +31,7 @@ from analyze_agent.ports.knowledge_retriever import KnowledgeBaseRetriever
 from analyze_agent.ports.reconstructor_errors import KnowledgeReconstructionError
 from analyze_agent.ports.requirement_analyzer import RequirementAnalyzer
 from analyze_agent.ports.retriever_errors import KnowledgeRetrievalError
+from analyze_agent.security import has_prompt_injection_pattern
 
 _NORMALIZE_SEPARATOR = re.compile(r"[\s-]+")
 
@@ -65,11 +66,21 @@ class AnalysisPipeline:
 
         signals = await self._analyzer.analyze(requirement)
         warnings: list[str] = []
+        if has_prompt_injection_pattern(requirement):
+            warnings.append(
+                "Requirement contains instruction-like text and was treated as "
+                "untrusted business input."
+            )
         chunks: list[KnowledgeChunk] = []
         try:
             chunks = await self._retriever.search(requirement)
         except KnowledgeRetrievalError as error:
             warnings.append(str(error))
+        if any(has_prompt_injection_pattern(chunk.text) for chunk in chunks):
+            warnings.append(
+                "Knowledge Base chunks contained instruction-like text and were "
+                "treated as untrusted evidence."
+            )
 
         reused_mappings = []
         if chunks and self._knowledge_reconstructor is not None:
@@ -175,4 +186,3 @@ def _required_confidence(signals: ConfidenceSignals):
 
 def _normalize_field(name: str) -> str:
     return _NORMALIZE_SEPARATOR.sub("_", name.strip()).lower()
-

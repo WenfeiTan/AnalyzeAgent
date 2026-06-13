@@ -7,9 +7,11 @@ from collections.abc import Mapping
 from typing import Any
 
 from google import genai
-from google.genai import types
-from pydantic import ValidationError
 
+from analyze_agent.adapters.gemini_structured import (
+    StructuredOutputError,
+    generate_structured,
+)
 from analyze_agent.domain.models import RequirementUpdateSignals, SearchFeedback
 from analyze_agent.ports.analyzer_errors import RequirementAnalysisError
 
@@ -36,9 +38,11 @@ class GeminiRequirementUpdater:
         api_key: str,
         model: str,
         client: Any | None = None,
+        repair_attempts: int = 1,
     ) -> None:
         self.model = model
         self._client = client or genai.Client(api_key=api_key)
+        self._repair_attempts = repair_attempts
 
     async def update(
         self,
@@ -61,23 +65,15 @@ class GeminiRequirementUpdater:
             default=str,
         )
         try:
-            response = await self._client.aio.models.generate_content(
+            return await generate_structured(
+                client=self._client,
                 model=self.model,
                 contents=contents,
-                config=types.GenerateContentConfig(
-                    system_instruction=_SYSTEM_INSTRUCTION,
-                    temperature=0,
-                    response_mime_type="application/json",
-                    response_schema=RequirementUpdateSignals,
-                ),
+                system_instruction=_SYSTEM_INSTRUCTION,
+                schema=RequirementUpdateSignals,
+                repair_attempts=self._repair_attempts,
             )
-            if isinstance(response.parsed, RequirementUpdateSignals):
-                return response.parsed
-            if response.parsed is not None:
-                return RequirementUpdateSignals.model_validate(response.parsed)
-            if response.text:
-                return RequirementUpdateSignals.model_validate_json(response.text)
-        except (ValidationError, ValueError, TypeError) as error:
+        except StructuredOutputError as error:
             raise RequirementAnalysisError(
                 f"Gemini returned an invalid updated requirement: {error}",
                 retryable=False,
@@ -87,9 +83,3 @@ class GeminiRequirementUpdater:
                 f"Gemini requirement update failed: {error}",
                 retryable=True,
             ) from error
-
-        raise RequirementAnalysisError(
-            "Gemini returned no structured updated requirement.",
-            retryable=False,
-        )
-

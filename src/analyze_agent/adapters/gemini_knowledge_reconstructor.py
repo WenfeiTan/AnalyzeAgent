@@ -6,9 +6,11 @@ import json
 from typing import Any
 
 from google import genai
-from google.genai import types
-from pydantic import ValidationError
 
+from analyze_agent.adapters.gemini_structured import (
+    StructuredOutputError,
+    generate_structured,
+)
 from analyze_agent.domain.models import (
     AnalyzedRequirement,
     KnowledgeChunk,
@@ -38,9 +40,11 @@ class GeminiKnowledgeReconstructor:
         api_key: str,
         model: str,
         client: Any | None = None,
+        repair_attempts: int = 1,
     ) -> None:
         self.model = model
         self._client = client or genai.Client(api_key=api_key)
+        self._repair_attempts = repair_attempts
 
     async def reconstruct(
         self,
@@ -58,23 +62,15 @@ class GeminiKnowledgeReconstructor:
             ensure_ascii=True,
         )
         try:
-            response = await self._client.aio.models.generate_content(
+            return await generate_structured(
+                client=self._client,
                 model=self.model,
                 contents=contents,
-                config=types.GenerateContentConfig(
-                    system_instruction=_SYSTEM_INSTRUCTION,
-                    temperature=0,
-                    response_mime_type="application/json",
-                    response_schema=KnowledgeReuseSignals,
-                ),
+                system_instruction=_SYSTEM_INSTRUCTION,
+                schema=KnowledgeReuseSignals,
+                repair_attempts=self._repair_attempts,
             )
-            if isinstance(response.parsed, KnowledgeReuseSignals):
-                return response.parsed
-            if response.parsed is not None:
-                return KnowledgeReuseSignals.model_validate(response.parsed)
-            if response.text:
-                return KnowledgeReuseSignals.model_validate_json(response.text)
-        except (ValidationError, ValueError, TypeError) as error:
+        except StructuredOutputError as error:
             raise KnowledgeReconstructionError(
                 f"Gemini returned invalid knowledge reconstruction: {error}",
                 retryable=False,
@@ -84,9 +80,3 @@ class GeminiKnowledgeReconstructor:
                 f"Gemini knowledge reconstruction failed: {error}",
                 retryable=True,
             ) from error
-
-        raise KnowledgeReconstructionError(
-            "Gemini returned no structured knowledge reconstruction.",
-            retryable=False,
-        )
-
