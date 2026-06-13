@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-14 00:30 Asia/Shanghai
 - Completed: 2026-06-14 00:32 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 00:33 Asia/Shanghai
 - Base commit: `52e28a6`
-- Final commit:
+- Final commit: `8100670`
 
 ## Objective
 
@@ -43,6 +43,14 @@ Implement `analyze_initial` from an English requirement through structured outpu
 - Evidence: `make test` passed 40 tests; Ruff and diff checks passed.
 - Decision: Non-empty chunk mapping remains intentionally unused until the knowledge-reuse branch.
 - Next: Commit and merge, then implement chunk evidence reconstruction and reuse.
+
+### 2026-06-14 00:33 Asia/Shanghai
+
+- Action: Committed and squash-merged the branch into `main`.
+- Result: `analyze_initial` application behavior is available on `main`.
+- Evidence: Main commit `8100670`.
+- Decision: Extend the existing use case with a separate chunk reconstruction port.
+- Next: Create `codex/knowledge-reuse`.
 
 ## Files Changed
 

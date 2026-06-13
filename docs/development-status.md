@@ -4,16 +4,16 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 00:32 Asia/Shanghai
-- Current branch: `codex/initial-analysis`
-- Current HEAD: `52e28a6`
-- Current status: `completed`
-- Progress: `5/10` currently applicable branches merged
-- Current objective: Merge the completed initial requirement analysis workflow.
-- Recently completed: English validation, Gemini structured adapter, grouped suggestions, deterministic scoring, trace, degradation, and first revision persistence.
-- Next action: Commit and squash-merge `codex/initial-analysis`, then create `codex/knowledge-reuse`.
+- Last updated: 2026-06-14 00:33 Asia/Shanghai
+- Current branch: `main`
+- Current HEAD: `8100670`
+- Current status: `pending`
+- Progress: `6/10` currently applicable branches merged
+- Current objective: Implement chunk evidence reconstruction and verified mapping reuse.
+- Recently completed: `codex/initial-analysis` squash-merged into `main` at `8100670`.
+- Next action: Create `codex/knowledge-reuse` and its branch log.
 - Blockers: None.
-- Working tree note: Initial analysis is complete and awaiting commit.
+- Working tree note: Updating post-merge progress metadata.
 - Last verification: 40 tests passed; Ruff and diff checks passed.
 - Last verification: 35 tests passed; Ruff and diff checks passed.
 - Last verification: 27 tests passed; Ruff and diff checks passed.
@@ -28,7 +28,7 @@
 | 3 | `codex/sqlite-revisions` | `merged` | Requirement and immutable revision storage |
 | 4 | `codex/knowledge-retriever-contract` | `merged` | Stable `text -> chunks` port |
 | 5 | `codex/fake-knowledge-retriever` | `merged` | Fake payloads and failure scenarios |
-| 6 | `codex/initial-analysis` | `completed` | Initial requirement analysis workflow |
+| 6 | `codex/initial-analysis` | `merged` | Initial requirement analysis workflow |
 | 7 | `codex/knowledge-reuse` | `pending` | Chunk evidence and mapping reuse |
 | 8 | `codex/update-analysis` | `pending` | Feedback-driven requirement revision |
 | 9 | `codex/adk-integration` | `pending` | ADK operations and injected retriever tool |
@@ -68,3 +68,4 @@
 - Merged the fake retriever into `main` at `81fad5a`; progress is now 5/10.
 - Started `codex/initial-analysis` from `main@52e28a6`.
 - Completed initial analysis with 40 passing tests.
+- Merged initial analysis into `main` at `8100670`; progress is now 6/10.
