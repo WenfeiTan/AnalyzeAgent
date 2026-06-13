@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-14 00:56 Asia/Shanghai
 - Completed: 2026-06-14 01:03 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 01:04 Asia/Shanghai
 - Base commit: `eb0d68a`
-- Final commit:
+- Final commit: `074e725`
 
 ## Objective
 
@@ -43,6 +43,22 @@ Add production-oriented observability, bounded resilience, redaction, and securi
 - Evidence: `make test` passed 66 tests; Ruff, env, smoke, and diff checks passed.
 - Decision: Real telemetry export and vector-mcp transport remain deferred to deployment/integration work.
 - Next: Commit and merge, then run final verification from clean `main`.
+
+### 2026-06-14 01:04 Asia/Shanghai
+
+- Action: Committed and squash-merged the branch into `main`.
+- Result: Observability and hardening are available on `main`.
+- Evidence: Main implementation commit `074e725`.
+- Decision: Mark all currently applicable branches merged after final regression.
+- Next: Run final verification and close the current development scope.
+
+### 2026-06-14 01:06 Asia/Shanghai
+
+- Action: Ran final verification from `main` after all implementation merges.
+- Result: Dependency lock, package build/install, tests, lint, configuration, smoke, ADK declarations, and diff checks passed.
+- Evidence: 66 tests passed; `uv sync --locked --offline` succeeded; all three ADK FunctionTool declarations generated.
+- Decision: Current executable scope is complete; keep vector-mcp adapter deferred.
+- Next: Await the real vector-mcp contract or new user direction.
 
 ## Files Changed
 

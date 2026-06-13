@@ -4,17 +4,17 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 01:03 Asia/Shanghai
-- Current branch: `codex/observability-hardening`
-- Current HEAD: `eb0d68a`
+- Last updated: 2026-06-14 01:06 Asia/Shanghai
+- Current branch: `main`
+- Current HEAD: latest implementation merge `074e725`; verify exact HEAD with Git
 - Current status: `completed`
-- Progress: `9/10` currently applicable branches merged
-- Current objective: Merge the completed observability and hardening branch.
-- Recently completed: Structured logging, redaction, metrics, bounded timeout/retry, bounded schema repair, injection warnings, and runbook.
-- Next action: Commit and squash-merge `codex/observability-hardening`, then run final verification from `main`.
+- Progress: `10/10` currently applicable branches merged
+- Current objective: Current executable development scope is complete.
+- Recently completed: `codex/observability-hardening` squash-merged into `main` at `074e725`.
+- Next action: Await the real vector-mcp contract or a new user-directed development scope.
 - Blockers: None.
-- Working tree note: Hardening is complete and awaiting commit.
-- Last verification: 66 tests passed; Ruff, env, smoke, and diff checks passed.
+- Working tree note: No implementation changes pending; final status metadata is ready to commit.
+- Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
 - Last verification: 48 tests passed; Ruff and diff checks passed.
@@ -36,7 +36,7 @@
 | 7 | `codex/knowledge-reuse` | `merged` | Chunk evidence and mapping reuse |
 | 8 | `codex/update-analysis` | `merged` | Feedback-driven requirement revision |
 | 9 | `codex/adk-integration` | `merged` | ADK operations and injected retriever tool |
-| 10 | `codex/observability-hardening` | `completed` | Logging, tracing, resilience and security |
+| 10 | `codex/observability-hardening` | `merged` | Logging, tracing, resilience and security |
 | 11 | `codex/vector-mcp-adapter` | `deferred` | Awaiting real external service contract |
 
 ## Status Meanings
@@ -84,3 +84,5 @@
 - Merged ADK integration into `main` at `10a3e51`; progress is now 9/10.
 - Started `codex/observability-hardening` from `main@eb0d68a`.
 - Completed observability and hardening with 66 passing tests.
+- Merged observability and hardening into `main` at `074e725`; progress is now 10/10.
+- Completed final clean-main regression; current executable scope is complete.
