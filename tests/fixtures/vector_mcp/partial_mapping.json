@@ -1,0 +1,13 @@
+{
+  "chunks": [
+    {
+      "chunk_id": "partial-case-001",
+      "text": "An ADC review used the field ADC_entity_country and an entity_country attribute, but the source asset was not recorded.",
+      "similarity_score": 0.84,
+      "metadata": {
+        "case_status": "success",
+        "domain": "ADC"
+      }
+    }
+  ]
+}

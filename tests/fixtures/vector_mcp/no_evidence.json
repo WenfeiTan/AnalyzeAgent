@@ -1,0 +1,12 @@
+{
+  "chunks": [
+    {
+      "chunk_id": "context-only-001",
+      "text": "Basel 3 changes can affect ADC review processes.",
+      "similarity_score": 0.79,
+      "metadata": {
+        "domain": "ADC"
+      }
+    }
+  ]
+}
