@@ -4,16 +4,16 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 00:53 Asia/Shanghai
-- Current branch: `codex/adk-integration`
-- Current HEAD: `164d61f`
-- Current status: `completed`
-- Progress: `8/10` currently applicable branches merged
-- Current objective: Merge the completed Google ADK integration.
-- Recently completed: Lazy runtime composition, Gemini adapters, Fake Retriever binding, three async tools, and root-agent registration.
-- Next action: Commit and squash-merge `codex/adk-integration`, then create `codex/observability-hardening`.
+- Last updated: 2026-06-14 00:54 Asia/Shanghai
+- Current branch: `main`
+- Current HEAD: `10a3e51`
+- Current status: `pending`
+- Progress: `9/10` currently applicable branches merged
+- Current objective: Add observability, resilience, security, and final regression coverage.
+- Recently completed: `codex/adk-integration` squash-merged into `main` at `10a3e51`.
+- Next action: Create `codex/observability-hardening` and its branch log.
 - Blockers: None.
-- Working tree note: ADK integration is complete and awaiting commit.
+- Working tree note: Updating post-merge progress metadata.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
 - Last verification: 48 tests passed; Ruff and diff checks passed.
@@ -34,7 +34,7 @@
 | 6 | `codex/initial-analysis` | `merged` | Initial requirement analysis workflow |
 | 7 | `codex/knowledge-reuse` | `merged` | Chunk evidence and mapping reuse |
 | 8 | `codex/update-analysis` | `merged` | Feedback-driven requirement revision |
-| 9 | `codex/adk-integration` | `completed` | ADK operations and injected retriever tool |
+| 9 | `codex/adk-integration` | `merged` | ADK operations and injected retriever tool |
 | 10 | `codex/observability-hardening` | `pending` | Logging, tracing, resilience and security |
 | 11 | `codex/vector-mcp-adapter` | `deferred` | Awaiting real external service contract |
 
@@ -80,3 +80,4 @@
 - Merged updated analysis into `main` at `0d182ef`; progress is now 8/10.
 - Started `codex/adk-integration` from `main@164d61f`.
 - Completed ADK integration with 56 passing tests.
+- Merged ADK integration into `main` at `10a3e51`; progress is now 9/10.

@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-14 00:49 Asia/Shanghai
 - Completed: 2026-06-14 00:53 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 00:54 Asia/Shanghai
 - Base commit: `164d61f`
-- Final commit:
+- Final commit: `10a3e51`
 
 ## Objective
 
@@ -43,6 +43,14 @@ Expose Initial, Updated, and Knowledge Base search operations through the Google
 - Evidence: `make test` passed 56 tests; Ruff, diff, env, and smoke checks passed; ADK 2.2 generated declarations for all three FunctionTools.
 - Decision: Keep deployment/server selection outside this branch.
 - Next: Commit and merge, then harden observability, resilience, and security.
+
+### 2026-06-14 00:54 Asia/Shanghai
+
+- Action: Committed and squash-merged the branch into `main`.
+- Result: Google ADK tools and runtime composition are available on `main`.
+- Evidence: Main commit `10a3e51`.
+- Decision: Finish current scope with observability and hardening.
+- Next: Create `codex/observability-hardening`.
 
 ## Files Changed
 
