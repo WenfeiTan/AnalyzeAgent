@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-14 00:42 Asia/Shanghai
 - Completed: 2026-06-14 00:46 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 00:47 Asia/Shanghai
 - Base commit: `d081a8a`
-- Final commit:
+- Final commit: `0d182ef`
 
 ## Objective
 
@@ -43,6 +43,14 @@ Implement feedback-driven requirement updates as complete new English revisions 
 - Evidence: `make test` passed 54 tests; Ruff and diff checks passed.
 - Decision: User-confirmed mappings score 0.80/medium until external success governance promotes them.
 - Next: Commit and merge, then integrate both operations with ADK.
+
+### 2026-06-14 00:47 Asia/Shanghai
+
+- Action: Committed and squash-merged the branch into `main`.
+- Result: Feedback-driven updated analysis is available on `main`.
+- Evidence: Main commit `0d182ef`.
+- Decision: Register both application services through a single ADK root agent.
+- Next: Create `codex/adk-integration`.
 
 ## Files Changed
 
