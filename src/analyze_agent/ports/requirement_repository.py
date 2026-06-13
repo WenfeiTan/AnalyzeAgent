@@ -14,6 +14,8 @@ class RequirementRepository(Protocol):
     def create_requirement(
         self,
         *,
+        requirement_id: UUID | None = None,
+        revision_id: UUID | None = None,
         full_requirement: str,
         analyzed_requirement: Mapping[str, Any] | None = None,
         feedback: Sequence[SearchFeedback] = (),
@@ -36,4 +38,3 @@ class RequirementRepository(Protocol):
         feedback: Sequence[SearchFeedback] = (),
         output_snapshot: Mapping[str, Any] | None = None,
     ) -> RequirementRevision: ...
-

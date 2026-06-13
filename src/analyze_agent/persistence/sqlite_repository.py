@@ -82,13 +82,15 @@ class SQLiteRequirementRepository:
     def create_requirement(
         self,
         *,
+        requirement_id: UUID | None = None,
+        revision_id: UUID | None = None,
         full_requirement: str,
         analyzed_requirement: Mapping[str, Any] | None = None,
         feedback: Sequence[SearchFeedback] = (),
         output_snapshot: Mapping[str, Any] | None = None,
     ) -> RequirementRevision:
-        requirement_id = uuid4()
-        revision_id = uuid4()
+        requirement_id = requirement_id or uuid4()
+        revision_id = revision_id or uuid4()
         created_at = _utc_now()
 
         with self._transaction() as connection:
