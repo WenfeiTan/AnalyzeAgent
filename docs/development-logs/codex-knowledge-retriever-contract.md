@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-14 00:22 Asia/Shanghai
 - Completed: 2026-06-14 00:23 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 00:24 Asia/Shanghai
 - Base commit: `0945fbd`
-- Final commit:
+- Final commit: `9d84856`
 
 ## Objective
 
@@ -41,6 +41,14 @@ Define a stable asynchronous `text -> chunks` boundary for Knowledge Base retrie
 - Evidence: `make test` passed 27 tests; Ruff and diff checks passed.
 - Decision: Retries remain an adapter/application concern rather than part of the port signature.
 - Next: Commit and merge, then implement the fake retriever.
+
+### 2026-06-14 00:24 Asia/Shanghai
+
+- Action: Committed and squash-merged the branch into `main`.
+- Result: The async retriever port is available on `main`.
+- Evidence: Main commit `9d84856`.
+- Decision: Implement fake scenarios behind this exact port.
+- Next: Create `codex/fake-knowledge-retriever`.
 
 ## Files Changed
 
