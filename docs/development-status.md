@@ -4,16 +4,17 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 00:20 Asia/Shanghai
-- Current branch: `main`
-- Current HEAD: `aa5418f`
-- Current status: `pending`
+- Last updated: 2026-06-14 00:23 Asia/Shanghai
+- Current branch: `codex/knowledge-retriever-contract`
+- Current HEAD: `0945fbd`
+- Current status: `completed`
 - Progress: `3/10` currently applicable branches merged
-- Current objective: Define the stable Knowledge Base retriever contract.
-- Recently completed: `codex/sqlite-revisions` squash-merged into `main` at `aa5418f`.
-- Next action: Create `codex/knowledge-retriever-contract` and its branch log.
+- Current objective: Merge the completed Knowledge Base retriever contract.
+- Recently completed: Async `text -> chunks` protocol and typed transport-independent retrieval failures.
+- Next action: Commit and squash-merge `codex/knowledge-retriever-contract`, then create `codex/fake-knowledge-retriever`.
 - Blockers: None.
-- Working tree note: Updating post-merge progress metadata.
+- Working tree note: Retriever contract is complete and awaiting commit.
+- Last verification: 27 tests passed; Ruff and diff checks passed.
 - Last verification: 23 tests passed; Ruff, diff check, and configuration check passed.
 
 ## Branch Status
@@ -23,7 +24,7 @@
 | 1 | `codex/bootstrap-adk-python` | `merged` | Python, ADK, Gemini, config and test skeleton |
 | 2 | `codex/domain-contracts` | `merged` | Typed schemas and confidence rules |
 | 3 | `codex/sqlite-revisions` | `merged` | Requirement and immutable revision storage |
-| 4 | `codex/knowledge-retriever-contract` | `pending` | Stable `text -> chunks` port |
+| 4 | `codex/knowledge-retriever-contract` | `completed` | Stable `text -> chunks` port |
 | 5 | `codex/fake-knowledge-retriever` | `pending` | Fake payloads and failure scenarios |
 | 6 | `codex/initial-analysis` | `pending` | Initial requirement analysis workflow |
 | 7 | `codex/knowledge-reuse` | `pending` | Chunk evidence and mapping reuse |
@@ -57,3 +58,5 @@
 - Started `codex/sqlite-revisions` from `main@3a18946`.
 - Completed SQLite revisions with 23 passing tests, including concurrent conflict coverage.
 - Merged SQLite revisions into `main` at `aa5418f`; progress is now 3/10.
+- Started `codex/knowledge-retriever-contract` from `main@0945fbd`.
+- Completed the retriever contract with 27 passing tests.
