@@ -4,16 +4,16 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 00:19 Asia/Shanghai
-- Current branch: `codex/sqlite-revisions`
-- Current HEAD: `3a18946`
-- Current status: `completed`
-- Progress: `2/10` currently applicable branches merged
-- Current objective: Merge the completed SQLite revisions into `main`.
-- Recently completed: SQLite repository, immutable history, feedback/output snapshots, and optimistic conflict detection.
-- Next action: Commit and squash-merge `codex/sqlite-revisions`, then create `codex/knowledge-retriever-contract`.
+- Last updated: 2026-06-14 00:20 Asia/Shanghai
+- Current branch: `main`
+- Current HEAD: `aa5418f`
+- Current status: `pending`
+- Progress: `3/10` currently applicable branches merged
+- Current objective: Define the stable Knowledge Base retriever contract.
+- Recently completed: `codex/sqlite-revisions` squash-merged into `main` at `aa5418f`.
+- Next action: Create `codex/knowledge-retriever-contract` and its branch log.
 - Blockers: None.
-- Working tree note: SQLite persistence is complete and awaiting commit.
+- Working tree note: Updating post-merge progress metadata.
 - Last verification: 23 tests passed; Ruff, diff check, and configuration check passed.
 
 ## Branch Status
@@ -22,7 +22,7 @@
 | --- | --- | --- | --- |
 | 1 | `codex/bootstrap-adk-python` | `merged` | Python, ADK, Gemini, config and test skeleton |
 | 2 | `codex/domain-contracts` | `merged` | Typed schemas and confidence rules |
-| 3 | `codex/sqlite-revisions` | `completed` | Requirement and immutable revision storage |
+| 3 | `codex/sqlite-revisions` | `merged` | Requirement and immutable revision storage |
 | 4 | `codex/knowledge-retriever-contract` | `pending` | Stable `text -> chunks` port |
 | 5 | `codex/fake-knowledge-retriever` | `pending` | Fake payloads and failure scenarios |
 | 6 | `codex/initial-analysis` | `pending` | Initial requirement analysis workflow |
@@ -56,3 +56,4 @@
 - Merged domain contracts into `main` at `a6958cd`; progress is now 2/10.
 - Started `codex/sqlite-revisions` from `main@3a18946`.
 - Completed SQLite revisions with 23 passing tests, including concurrent conflict coverage.
+- Merged SQLite revisions into `main` at `aa5418f`; progress is now 3/10.

@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-14 00:16 Asia/Shanghai
 - Completed: 2026-06-14 00:19 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 00:20 Asia/Shanghai
 - Base commit: `3a18946`
-- Final commit:
+- Final commit: `aa5418f`
 
 ## Objective
 
@@ -43,6 +43,14 @@ Persist requirement history and immutable revisions with code-managed SQLite tra
 - Evidence: `make test` passed 23 tests including real-file concurrency; Ruff, diff check, and env check passed.
 - Decision: Production database replacement remains behind the repository port.
 - Next: Commit and merge, then define the Knowledge Base retriever contract.
+
+### 2026-06-14 00:20 Asia/Shanghai
+
+- Action: Committed and squash-merged the branch into `main`.
+- Result: SQLite revision persistence is available on `main`.
+- Evidence: Main commit `aa5418f`.
+- Decision: Continue with the retriever port before implementing its fake adapter.
+- Next: Create `codex/knowledge-retriever-contract`.
 
 ## Files Changed
 
