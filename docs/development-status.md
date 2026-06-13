@@ -4,23 +4,23 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 00:05 Asia/Shanghai
-- Current branch: `codex/bootstrap-adk-python`
-- Current HEAD: `2e866ca`
-- Current status: `completed`
-- Progress: `0/10` currently applicable branches merged
-- Current objective: Merge the completed Python/ADK bootstrap into `main`.
-- Recently completed: Python package, Google ADK 2.2 root agent, Gemini environment configuration, uv lockfile, Make commands, and bootstrap tests.
-- Next action: Commit and squash-merge `codex/bootstrap-adk-python`, then create `codex/domain-contracts`.
+- Last updated: 2026-06-14 00:08 Asia/Shanghai
+- Current branch: `main`
+- Current HEAD: `9b22dd4`
+- Current status: `pending`
+- Progress: `1/10` currently applicable branches merged
+- Current objective: Begin typed domain contracts and confidence rules.
+- Recently completed: `codex/bootstrap-adk-python` squash-merged into `main` at `9b22dd4`.
+- Next action: Create `codex/domain-contracts` and its branch log.
 - Blockers: None.
-- Working tree note: Bootstrap implementation is complete and awaiting commit.
+- Working tree note: Updating post-merge progress metadata.
 - Last verification: 4 tests passed; Ruff passed; env/smoke checks passed with placeholder key; missing-key check failed clearly as expected.
 
 ## Branch Status
 
 | Order | Branch | Status | Summary |
 | --- | --- | --- | --- |
-| 1 | `codex/bootstrap-adk-python` | `completed` | Python, ADK, Gemini, config and test skeleton |
+| 1 | `codex/bootstrap-adk-python` | `merged` | Python, ADK, Gemini, config and test skeleton |
 | 2 | `codex/domain-contracts` | `pending` | Typed schemas and confidence rules |
 | 3 | `codex/sqlite-revisions` | `pending` | Requirement and immutable revision storage |
 | 4 | `codex/knowledge-retriever-contract` | `pending` | Stable `text -> chunks` port |
@@ -50,3 +50,4 @@
 - Created the sequential branch execution plan and persistent logging protocol.
 - Committed planning baseline `2e866ca` and started `codex/bootstrap-adk-python`.
 - Completed `codex/bootstrap-adk-python`; 4 tests and all bootstrap checks passed.
+- Merged bootstrap into `main` at `9b22dd4`; progress is now 1/10.

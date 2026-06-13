@@ -5,9 +5,9 @@
 - Status: completed
 - Started: 2026-06-13 23:37 Asia/Shanghai
 - Completed: 2026-06-14 00:05 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 00:08 Asia/Shanghai
 - Base commit: `2e866ca`
-- Final commit:
+- Final commit: `9b22dd4`
 
 ## Objective
 
@@ -43,6 +43,14 @@ Establish a runnable Python, Google ADK, Gemini configuration, and test skeleton
 - Evidence: `google-adk==2.2.0`; `make test` passed 4 tests; `make lint` passed; placeholder-key env and smoke checks passed.
 - Decision: Keep real Gemini calls out of bootstrap tests and validate configuration without sending network requests.
 - Next: Commit the branch and squash-merge it into `main`.
+
+### 2026-06-14 00:08 Asia/Shanghai
+
+- Action: Committed the branch and squash-merged it into `main`.
+- Result: Bootstrap is available on `main`.
+- Evidence: Main commit `9b22dd4`.
+- Decision: Continue with the domain contracts branch.
+- Next: Create `codex/domain-contracts` from `main`.
 
 ## Files Changed
 
