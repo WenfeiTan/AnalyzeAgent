@@ -7,7 +7,7 @@ from typing import Any, Protocol
 from uuid import UUID
 
 from analyze_agent.domain.models import RequirementChange, SearchFeedback
-from analyze_agent.persistence.models import RequirementRevision
+from analyze_agent.persistence.models import RequirementRevision, RequirementSummary
 
 
 class RequirementRepository(Protocol):
@@ -25,6 +25,8 @@ class RequirementRepository(Protocol):
     def get_latest_revision(self, requirement_id: UUID) -> RequirementRevision: ...
 
     def list_revisions(self, requirement_id: UUID) -> list[RequirementRevision]: ...
+
+    def list_requirements(self) -> list[RequirementSummary]: ...
 
     def append_revision(
         self,

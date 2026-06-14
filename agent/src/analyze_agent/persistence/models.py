@@ -23,3 +23,12 @@ class RequirementRevision(BaseModel):
     output_snapshot: dict[str, Any] | None = None
     created_at: datetime
 
+
+class RequirementSummary(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    requirement_id: UUID
+    latest_revision_number: int = Field(ge=1)
+    summary: str
+    created_at: datetime
+    updated_at: datetime

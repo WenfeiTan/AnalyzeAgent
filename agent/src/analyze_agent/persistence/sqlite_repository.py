@@ -18,7 +18,7 @@ from analyze_agent.persistence.errors import (
     RequirementNotFoundError,
     RevisionConflictError,
 )
-from analyze_agent.persistence.models import RequirementRevision
+from analyze_agent.persistence.models import RequirementRevision, RequirementSummary
 
 _FEEDBACK_ADAPTER = TypeAdapter(list[SearchFeedback])
 _CHANGES_ADAPTER = TypeAdapter(list[RequirementChange])
@@ -150,6 +150,38 @@ class SQLiteRequirementRepository:
                 self._get_revision(connection, UUID(row["revision_id"]))
                 for row in rows
             ]
+
+    def list_requirements(self) -> list[RequirementSummary]:
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                """
+                SELECT
+                    r.requirement_id,
+                    r.revision_number,
+                    r.full_requirement,
+                    q.created_at,
+                    r.created_at AS updated_at
+                FROM requirements AS q
+                JOIN revisions AS r
+                    ON r.requirement_id = q.requirement_id
+                WHERE r.revision_number = (
+                    SELECT MAX(latest.revision_number)
+                    FROM revisions AS latest
+                    WHERE latest.requirement_id = q.requirement_id
+                )
+                ORDER BY r.created_at DESC
+                """
+            ).fetchall()
+        return [
+            RequirementSummary(
+                requirement_id=UUID(row["requirement_id"]),
+                latest_revision_number=row["revision_number"],
+                summary=row["full_requirement"],
+                created_at=datetime.fromisoformat(row["created_at"]),
+                updated_at=datetime.fromisoformat(row["updated_at"]),
+            )
+            for row in rows
+        ]
 
     def append_revision(
         self,

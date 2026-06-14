@@ -11,7 +11,8 @@ from analyze_agent.domain.models import (
     KnowledgeChunk,
     UpdatedAnalysisRequest,
 )
-from analyze_agent.persistence.models import RequirementRevision
+from analyze_agent.persistence.models import RequirementRevision, RequirementSummary
+from analyze_agent.persistence.sqlite_repository import SQLiteRequirementRepository
 from analyze_agent.runtime import AnalyzeAgentRuntime, build_runtime
 from analyze_agent.workflow_events import StageEventSink
 
@@ -61,3 +62,26 @@ class AnalyzeAgent:
 
     def list_revisions(self, requirement_id: UUID) -> list[RequirementRevision]:
         return self._runtime.repository.list_revisions(requirement_id)
+
+
+class AnalyzeAgentHistory:
+    """Read persisted requirement history without initializing model adapters."""
+
+    def __init__(self, repository: SQLiteRequirementRepository) -> None:
+        self._repository = repository
+
+    @classmethod
+    def from_settings(cls, settings: Settings | None = None) -> AnalyzeAgentHistory:
+        resolved = settings or load_settings(require_api_key=False)
+        repository = SQLiteRequirementRepository(resolved.database_path)
+        repository.initialize()
+        return cls(repository)
+
+    def list_requirements(self) -> list[RequirementSummary]:
+        return self._repository.list_requirements()
+
+    def get_latest_revision(self, requirement_id: UUID) -> RequirementRevision:
+        return self._repository.get_latest_revision(requirement_id)
+
+    def list_revisions(self, requirement_id: UUID) -> list[RequirementRevision]:
+        return self._repository.list_revisions(requirement_id)

@@ -44,6 +44,10 @@ def test_create_and_restore_initial_revision(
         "clear_fields": [],
         "keywords": ["ADC"],
     }
+    summaries = repository.list_requirements()
+    assert summaries[0].requirement_id == revision.requirement_id
+    assert summaries[0].latest_revision_number == 1
+    assert summaries[0].summary == revision.full_requirement
 
 
 def test_append_revision_preserves_history_and_feedback(
@@ -138,4 +142,3 @@ def test_concurrent_updates_do_not_overwrite_each_other(
 
     assert sorted(results) == ["conflict", "created"]
     assert len(repository.list_revisions(initial.requirement_id)) == 2
-
