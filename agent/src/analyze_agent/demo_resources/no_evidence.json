@@ -1,0 +1,13 @@
+{
+  "chunks": [
+    {
+      "chunk_id": "demo-no-evidence",
+      "text": "A general ADC glossary entry without a verified mapping.",
+      "similarity_score": 0.79,
+      "metadata": {
+        "case_status": "reference",
+        "domain": "ADC"
+      }
+    }
+  ]
+}

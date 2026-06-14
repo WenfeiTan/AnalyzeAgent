@@ -2,19 +2,18 @@
 
 from __future__ import annotations
 
+import json
 from enum import StrEnum
+from importlib.resources import files
 
 from analyze_agent.adapters.fake_knowledge_retriever import (
     FakeKnowledgeBaseRetriever,
     FakeRetrievalScenario,
+    parse_fake_scenario,
 )
 from analyze_agent.config import Settings, load_settings
-from analyze_agent.domain.models import KnowledgeChunk
 from analyze_agent.facade import AnalyzeAgent
-from analyze_agent.ports.retriever_errors import (
-    InvalidKnowledgeResponse,
-    KnowledgeRetrievalTimeout,
-)
+from analyze_agent.ports.retriever_errors import InvalidKnowledgeResponse
 from analyze_agent.runtime import build_runtime
 
 
@@ -35,52 +34,22 @@ def create_demo_agent(
     resolved = settings or load_settings(require_api_key=True)
     selected = DemoKnowledgeScenario(scenario)
     retriever = FakeKnowledgeBaseRetriever(
-        default_scenario=_scenario(selected)
+        default_scenario=load_demo_scenario(selected)
     )
     return AnalyzeAgent(build_runtime(resolved, retriever=retriever))
 
 
-def _scenario(selected: DemoKnowledgeScenario) -> FakeRetrievalScenario:
-    if selected is DemoKnowledgeScenario.EMPTY:
-        return FakeRetrievalScenario()
-    if selected is DemoKnowledgeScenario.TIMEOUT:
-        return FakeRetrievalScenario(error=KnowledgeRetrievalTimeout())
-    if selected is DemoKnowledgeScenario.INVALID:
-        return FakeRetrievalScenario(
-            error=InvalidKnowledgeResponse("Fake Knowledge Base returned invalid data.")
-        )
-    if selected is DemoKnowledgeScenario.NO_EVIDENCE:
-        return FakeRetrievalScenario(
-            chunks=(
-                KnowledgeChunk(
-                    chunk_id="demo-no-evidence",
-                    text="A general ADC glossary entry without a verified mapping.",
-                    metadata={"case_status": "reference"},
-                ),
-            )
-        )
-    if selected is DemoKnowledgeScenario.PARTIAL_MAPPING:
-        return FakeRetrievalScenario(
-            chunks=(
-                KnowledgeChunk(
-                    chunk_id="demo-partial-mapping",
-                    text=(
-                        "A prior ADC review mentioned ADC_entity_country and "
-                        "entity_country, but did not identify a source asset."
-                    ),
-                    metadata={"case_status": "partial"},
-                ),
-            )
-        )
-    return FakeRetrievalScenario(
-        chunks=(
-            KnowledgeChunk(
-                chunk_id="demo-complete-mapping",
-                text=(
-                    "Successful ADC review mapping: ADC_entity_country uses "
-                    "attribute entity_country from asset adc_entity."
-                ),
-                metadata={"case_status": "success"},
-            ),
-        )
+def load_demo_scenario(
+    scenario: DemoKnowledgeScenario | str,
+) -> FakeRetrievalScenario:
+    selected = DemoKnowledgeScenario(scenario)
+    resource = files("analyze_agent.demo_resources").joinpath(
+        f"{selected.value}.json"
     )
+    try:
+        payload = json.loads(resource.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise InvalidKnowledgeResponse(
+            f"Unable to load packaged demo scenario {selected.value}: {error}"
+        ) from error
+    return parse_fake_scenario(payload)

@@ -1,0 +1,13 @@
+{
+  "chunks": [
+    {
+      "chunk_id": "demo-partial-mapping",
+      "text": "A prior ADC review mentioned ADC_entity_country and entity_country, but did not identify a source asset.",
+      "similarity_score": 0.84,
+      "metadata": {
+        "case_status": "partial",
+        "domain": "ADC"
+      }
+    }
+  ]
+}

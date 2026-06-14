@@ -30,6 +30,7 @@ from analyze_api.models import (
     JobSubmission,
     UpdateJobRequest,
 )
+from analyze_api.observability import WebMetrics, log_job_event
 
 
 class AgentFactory(Protocol):
@@ -67,10 +68,17 @@ class JobRecord:
 
 
 class JobStore:
-    def __init__(self, *, max_jobs: int, max_events_per_job: int) -> None:
+    def __init__(
+        self,
+        *,
+        max_jobs: int,
+        max_events_per_job: int,
+        metrics: WebMetrics | None = None,
+    ) -> None:
         self._max_jobs = max_jobs
         self._max_events = max_events_per_job
         self._jobs: OrderedDict[UUID, JobRecord] = OrderedDict()
+        self.metrics = metrics or WebMetrics()
 
     def create(
         self,
@@ -92,6 +100,12 @@ class JobStore:
             events=deque(maxlen=self._max_events),
         )
         self._jobs[record.job_id] = record
+        self.metrics.increment("web_jobs.submitted")
+        log_job_event(
+            "web_job_submitted",
+            job_id=str(record.job_id),
+            request_id=str(record.request_id),
+        )
         return record
 
     def get(self, job_id: UUID) -> JobRecord | None:
@@ -101,6 +115,23 @@ class JobStore:
         record = self._jobs[job_id]
         record.events.append(event)
         record.updated_at = datetime.now(UTC)
+        self.metrics.increment("web_stage_events.total")
+        self.metrics.increment(
+            f"web_stage_events.{event.stage.value}.{event.status.value}"
+        )
+        if event.duration_ms is not None:
+            self.metrics.observe(
+                f"web_stage_duration_ms.{event.stage.value}",
+                event.duration_ms,
+            )
+        log_job_event(
+            "web_stage_event",
+            job_id=str(job_id),
+            request_id=str(event.request_id),
+            stage=event.stage.value,
+            status=event.status.value,
+            duration_ms=event.duration_ms,
+        )
 
     def events_after(self, job_id: UUID, sequence: int) -> list[StageEvent]:
         return [
@@ -241,12 +272,24 @@ class AnalysisJobService:
             record.status = JobStatus.COMPLETED
             record.result = response
             record.updated_at = datetime.now(UTC)
+            self.store.metrics.increment("web_jobs.completed")
+            log_job_event(
+                "web_job_completed",
+                job_id=str(record.job_id),
+                request_id=str(record.request_id),
+            )
 
-    @staticmethod
-    def _fail(record: JobRecord, *, code: str, message: str) -> None:
+    def _fail(self, record: JobRecord, *, code: str, message: str) -> None:
         record.status = JobStatus.FAILED
         record.error = ApiError(code=code, message=message)
         record.updated_at = datetime.now(UTC)
+        self.store.metrics.increment("web_jobs.failed")
+        log_job_event(
+            "web_job_failed",
+            job_id=str(record.job_id),
+            request_id=str(record.request_id),
+            error_code=code,
+        )
 
 
 def _safe_workflow_message(error: Exception) -> str:

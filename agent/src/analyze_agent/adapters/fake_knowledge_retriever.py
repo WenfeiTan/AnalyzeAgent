@@ -58,7 +58,11 @@ def load_fake_scenario(path: str | Path) -> FakeRetrievalScenario:
         raise InvalidKnowledgeResponse(
             f"Unable to load fake retrieval payload: {error}"
         ) from error
+    return parse_fake_scenario(raw_payload)
 
+
+def parse_fake_scenario(raw_payload: object) -> FakeRetrievalScenario:
+    """Validate a decoded Fake Knowledge Base payload."""
     if not isinstance(raw_payload, dict):
         raise InvalidKnowledgeResponse("Fake retrieval payload must be an object.")
 
@@ -86,4 +90,3 @@ def load_fake_scenario(path: str | Path) -> FakeRetrievalScenario:
         chunks=tuple(chunks),
         delay_seconds=float(delay_seconds),
     )
-

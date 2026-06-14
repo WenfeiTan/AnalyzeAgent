@@ -34,11 +34,13 @@ from analyze_api.models import (
     JobResponse,
     JobStatus,
     JobSubmission,
+    MetricsResponse,
     RequirementSummaryResponse,
     RevisionResponse,
     StageEventResponse,
     UpdateJobRequest,
 )
+from analyze_api.observability import configure_web_observability
 
 HistoryFactory = Callable[[], AnalyzeAgentHistory]
 
@@ -50,6 +52,8 @@ def create_app(
     settings: ApiSettings | None = None,
 ) -> FastAPI:
     api_settings = settings or ApiSettings.from_environment()
+    agent_settings = load_settings(require_api_key=False)
+    configure_web_observability(agent_settings.log_level)
     resolved_agent_factory = agent_factory or create_demo_agent
     resolved_history_factory = history_factory or AnalyzeAgentHistory.from_settings
     store = JobStore(
@@ -102,9 +106,12 @@ def create_app(
     async def health() -> dict[str, str]:
         return {"status": "ok"}
 
+    @app.get("/api/v1/metrics", response_model=MetricsResponse)
+    async def metrics() -> MetricsResponse:
+        return MetricsResponse.model_validate(store.metrics.snapshot())
+
     @app.get("/api/v1/configuration", response_model=ConfigurationResponse)
     async def configuration() -> ConfigurationResponse:
-        agent_settings = load_settings(require_api_key=False)
         return ConfigurationResponse(
             api_key_configured=bool(agent_settings.google_api_key),
             model=agent_settings.model,

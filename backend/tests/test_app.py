@@ -1,4 +1,6 @@
 import asyncio
+import json
+import logging
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
@@ -16,6 +18,7 @@ from fastapi.testclient import TestClient
 
 from analyze_api import create_app
 from analyze_api.config import ApiSettings
+from analyze_api.observability import WebJsonFormatter
 
 
 def _response(request_id: UUID, requirement_id: UUID | None = None) -> AnalyzeResponse:
@@ -150,6 +153,52 @@ def test_local_frontend_origins_are_allowed() -> None:
             )
             assert response.status_code == 200
             assert response.headers["access-control-allow-origin"] == origin
+
+
+def test_job_and_stage_metrics_are_exposed() -> None:
+    with _client() as client:
+        submission = client.post(
+            "/api/v1/jobs/initial",
+            json={"requirement": "Build an ADC review GDA."},
+        ).json()
+        _wait_for_terminal(client, submission["job_id"])
+        metrics = client.get("/api/v1/metrics").json()
+
+    assert metrics["counters"]["web_jobs.submitted"] == 1
+    assert metrics["counters"]["web_jobs.completed"] == 1
+    assert metrics["counters"]["web_stage_events.total"] == 1
+    assert metrics["observations"][
+        "web_stage_duration_ms.analyzing_requirement"
+    ] == [1.0]
+
+
+def test_web_job_logs_are_structured_and_operational_only() -> None:
+    record = logging.LogRecord(
+        "analyze_api.jobs",
+        logging.INFO,
+        __file__,
+        1,
+        "web_job_submitted",
+        (),
+        None,
+    )
+    record.event_fields = {
+        "job_id": "job-1",
+        "request_id": "request-1",
+    }
+
+    payload = json.loads(WebJsonFormatter().format(record))
+
+    assert payload["message"] == "web_job_submitted"
+    assert payload["job_id"] == "job-1"
+    assert set(payload) == {
+        "timestamp",
+        "level",
+        "logger",
+        "message",
+        "job_id",
+        "request_id",
+    }
 
 
 def test_initial_job_returns_result_and_replayable_sse() -> None:

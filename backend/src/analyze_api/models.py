@@ -96,6 +96,11 @@ class StageEventResponse(ApiModel):
     )
 
 
+class MetricsResponse(ApiModel):
+    counters: dict[str, int]
+    observations: dict[str, list[float]]
+
+
 class RequirementSummaryResponse(ApiModel):
     requirement_id: UUID
     latest_revision_number: int

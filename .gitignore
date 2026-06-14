@@ -153,6 +153,8 @@ activemq-data/
 .venv
 node_modules/
 dist/
+playwright-report/
+test-results/
 *.tsbuildinfo
 env/
 venv/

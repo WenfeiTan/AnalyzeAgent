@@ -1,0 +1,13 @@
+{
+  "chunks": [
+    {
+      "chunk_id": "demo-complete-mapping",
+      "text": "Successful ADC review mapping: ADC_entity_country uses attribute entity_country from asset adc_entity.",
+      "similarity_score": 0.93,
+      "metadata": {
+        "case_status": "success",
+        "domain": "ADC"
+      }
+    }
+  ]
+}

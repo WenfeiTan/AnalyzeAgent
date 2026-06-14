@@ -34,3 +34,14 @@ def test_demo_agents_have_isolated_retrieval_scenarios(tmp_path: Path) -> None:
 
     assert empty_chunks == []
     assert complete_chunks[0].chunk_id == "demo-complete-mapping"
+
+
+def test_all_packaged_demo_scenarios_load(tmp_path: Path) -> None:
+    for scenario in DemoKnowledgeScenario:
+        agent = create_demo_agent(scenario, settings=_settings(tmp_path))
+        if scenario in {
+            DemoKnowledgeScenario.TIMEOUT,
+            DemoKnowledgeScenario.INVALID,
+        }:
+            continue
+        asyncio.run(agent.search_knowledge_base("ADC requirement"))

@@ -2,7 +2,11 @@
 
 from analyze_agent.agent import root_agent
 from analyze_agent.config import ConfigurationError, Settings, load_settings
-from analyze_agent.demo import DemoKnowledgeScenario, create_demo_agent
+from analyze_agent.demo import (
+    DemoKnowledgeScenario,
+    create_demo_agent,
+    load_demo_scenario,
+)
 from analyze_agent.domain.models import (
     AnalyzeResponse,
     InitialAnalysisRequest,
@@ -50,6 +54,7 @@ __all__ = [
     "WorkflowStage",
     "build_runtime",
     "create_demo_agent",
+    "load_demo_scenario",
     "load_settings",
     "root_agent",
 ]

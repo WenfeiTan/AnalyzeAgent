@@ -648,6 +648,34 @@
         "title": "KeywordSuggestion",
         "type": "object"
       },
+      "MetricsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "counters": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Counters",
+            "type": "object"
+          },
+          "observations": {
+            "additionalProperties": {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            "title": "Observations",
+            "type": "object"
+          }
+        },
+        "required": [
+          "counters",
+          "observations"
+        ],
+        "title": "MetricsResponse",
+        "type": "object"
+      },
       "ProcessingTrace": {
         "additionalProperties": false,
         "properties": {
@@ -1397,6 +1425,24 @@
           }
         },
         "summary": "Stream Events"
+      }
+    },
+    "/api/v1/metrics": {
+      "get": {
+        "operationId": "metrics_api_v1_metrics_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Metrics"
       }
     },
     "/api/v1/requirements": {

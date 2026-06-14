@@ -5,15 +5,15 @@
 ## Current State
 
 - Last updated: 2026-06-14 Asia/Shanghai
-- Current branch: `main`
-- Current HEAD: `25b971f`
-- Current status: `merged`
+- Current branch: `codex/demo-hardening-runbook`
+- Current HEAD: `618cd03`
+- Current status: `completed`
 - Progress: Core scope `10/10` merged; Development Plan 2.0 `4/5` merged
 - Current objective: Harden the complete local development and product demo.
-- Recently completed: `codex/interactive-demo-ui` merged into `main`.
-- Next action: Start `codex/demo-hardening-runbook`.
+- Recently completed: Demo hardening implementation and full branch regression.
+- Next action: Merge `codex/demo-hardening-runbook` and verify clean `main`.
 - Blockers: None.
-- Working tree note: Fourth Development Plan 2.0 branch is merged.
+- Working tree note: Final Development Plan 2.0 branch is ready to merge.
 - Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
@@ -47,7 +47,7 @@
 | 2 | `codex/workflow-stage-events` | `merged` | Real application workflow stage events |
 | 3 | `codex/web-api-job-runtime` | `merged` | FastAPI jobs, SSE and history APIs |
 | 4 | `codex/interactive-demo-ui` | `merged` | React Initial, Update, History and result UI |
-| 5 | `codex/demo-hardening-runbook` | `pending` | Demo scenarios, E2E verification and docs |
+| 5 | `codex/demo-hardening-runbook` | `in_progress` | Demo scenarios, E2E verification and docs |
 
 ## Status Meanings
 
@@ -141,3 +141,8 @@
   live browser smoke all passed.
 - Squash merged `codex/interactive-demo-ui` into `main@25b971f`; Development
   Plan 2.0 progress is 4/5.
+- Started `codex/demo-hardening-runbook` from `main@618cd03`; final scope covers
+  packaged Fake KB resources, deterministic E2E, Web observability and runbook.
+- Completed `codex/demo-hardening-runbook`; Agent 71, Backend 17, Frontend 2 and
+  Playwright 2 tests passed with lint, build, OpenAPI, wheel, unified startup
+  and smoke verification.
