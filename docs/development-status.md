@@ -5,15 +5,15 @@
 ## Current State
 
 - Last updated: 2026-06-14 Asia/Shanghai
-- Current branch: `main`
-- Current HEAD: Development Plan 2.0 planning baseline; verify exact HEAD with Git
-- Current status: `planned`
+- Current branch: `codex/split-agent-backend-frontend`
+- Current HEAD: branch based on `main@acdc65f`
+- Current status: `completed`
 - Progress: Core scope `10/10` merged; Development Plan 2.0 `0/5` started
 - Current objective: Build a local interactive development and product demo UI.
-- Recently completed: Development Plan 2.0 scope and sequential branch design.
-- Next action: Start `codex/split-agent-backend-frontend` when directed.
+- Recently completed: Agent/Backend/Frontend workspace split and full regression.
+- Next action: Commit and squash merge `codex/split-agent-backend-frontend`.
 - Blockers: None.
-- Working tree note: No Development Plan 2.0 implementation branch has started.
+- Working tree note: First Development Plan 2.0 branch is complete and ready to commit.
 - Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
@@ -43,7 +43,7 @@
 
 | Order | Branch | Status | Summary |
 | --- | --- | --- | --- |
-| 1 | `codex/split-agent-backend-frontend` | `pending` | Reusable Agent package, Python Backend and TypeScript Frontend |
+| 1 | `codex/split-agent-backend-frontend` | `completed` | Reusable Agent package, Python Backend and TypeScript Frontend |
 | 2 | `codex/workflow-stage-events` | `pending` | Real application workflow stage events |
 | 3 | `codex/web-api-job-runtime` | `pending` | FastAPI jobs, SSE and history APIs |
 | 4 | `codex/interactive-demo-ui` | `pending` | React Initial, Update, History and result UI |
@@ -113,3 +113,7 @@
   one-way dependency rule `frontend -> backend -> agent`.
 - Agent remains an in-process reusable Python package rather than a third HTTP
   service; the first branch is now `codex/split-agent-backend-frontend`.
+- Started `codex/split-agent-backend-frontend` from `main@acdc65f`; baseline
+  verification passed with 66 tests and Ruff.
+- Completed the three-workspace split; Agent 67 tests, Backend 3 tests and
+  Frontend test/typecheck/lint/build all passed.

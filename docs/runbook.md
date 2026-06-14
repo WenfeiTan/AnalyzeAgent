@@ -3,9 +3,12 @@
 ## Local Setup
 
 ```bash
-uv sync
+cd agent && uv sync
+cd ../backend && uv sync
+cd ../frontend && pnpm install
+cd ..
 export GOOGLE_API_KEY="..."
-make env-check
+make agent-env-check
 make test
 make lint
 ```
@@ -13,7 +16,13 @@ make lint
 Run the ADK CLI:
 
 ```bash
-make adk-run
+make agent-run
+```
+
+Run the Backend shell:
+
+```bash
+make backend-run
 ```
 
 ## Runtime Configuration
@@ -23,7 +32,7 @@ make adk-run
 | `GOOGLE_API_KEY` | required | Gemini API authentication |
 | `ANALYZE_AGENT_MODEL` | `gemini-2.5-flash` | Gemini model ID |
 | `ANALYZE_AGENT_LOG_LEVEL` | `INFO` | Python log level |
-| `ANALYZE_AGENT_DATABASE_PATH` | `data/analyze-agent.sqlite3` | SQLite database |
+| `ANALYZE_AGENT_DATABASE_PATH` | `data/analyze-agent.sqlite3` | SQLite database, relative to the running process |
 | `ANALYZE_AGENT_MODEL_TIMEOUT_SECONDS` | `30` | Per model attempt timeout |
 | `ANALYZE_AGENT_RETRIEVER_TIMEOUT_SECONDS` | `10` | Per retrieval attempt timeout |
 | `ANALYZE_AGENT_MAX_ATTEMPTS` | `2` | Bounded external-call attempts |
@@ -107,13 +116,17 @@ revision and rerun analysis.
 ## Verification
 
 ```bash
-make test
-make lint
-GOOGLE_API_KEY=test-placeholder make env-check
-GOOGLE_API_KEY=test-placeholder make smoke-test
+make agent-test
+make backend-test
+make frontend-test
+make agent-lint
+make backend-lint
+make frontend-lint
+make frontend-typecheck
+make frontend-build
+GOOGLE_API_KEY=test-placeholder make agent-env-check
 git diff --check
 ```
 
 The placeholder key checks configuration and imports only; it does not send a
 Gemini request.
-

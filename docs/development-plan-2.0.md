@@ -71,6 +71,7 @@ Frontend：
 - React 和 TypeScript 适合结构化 Initial/Update 表单、动态 feedback editor 和复杂结果
   展示。
 - Vite 提供独立且轻量的前端开发、构建和测试环境。
+- pnpm 提供可重复的 Frontend dependency lock 和 workspace-local installation。
 - SSE 足以表达单向阶段状态，不需要 WebSocket。
 - `frontend -> backend -> agent` 是唯一允许的依赖方向。
 - Agent 不知道 Backend 或 Frontend；Backend 不知道 Frontend implementation。
@@ -99,7 +100,7 @@ AnalyzeAgent/
     tests/
   frontend/
     package.json
-    package-lock.json
+    pnpm-lock.yaml
     tsconfig.json
     vite.config.ts
     src/

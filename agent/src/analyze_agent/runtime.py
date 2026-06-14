@@ -42,6 +42,7 @@ class AnalyzeAgentRuntime:
     initial_service: InitialAnalysisService
     updated_service: UpdatedAnalysisService
     retriever: KnowledgeBaseRetriever
+    repository: RequirementRepository
 
 
 _runtime: AnalyzeAgentRuntime | None = None
@@ -135,4 +136,5 @@ def build_runtime(
             repository=repository,
         ),
         retriever=retriever,
+        repository=repository,
     )
