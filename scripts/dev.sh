@@ -2,6 +2,14 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if [[ -f "${ROOT_DIR}/.env" ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source "${ROOT_DIR}/.env"
+  set +a
+fi
+
 export ANALYZE_AGENT_DATABASE_PATH="${ANALYZE_AGENT_DATABASE_PATH:-${ROOT_DIR}/data/analyze-agent.sqlite3}"
 export VITE_ANALYZE_API_BASE_URL="${VITE_ANALYZE_API_BASE_URL:-http://localhost:8000}"
 

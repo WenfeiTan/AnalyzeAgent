@@ -41,6 +41,25 @@ def test_runtime_settings_require_gemini_api_key(
         load_settings(require_api_key=True)
 
 
+@pytest.mark.parametrize(
+    "api_key",
+    [
+        '"test-key"',
+        "'test-key'",
+        "\u201ctest-key\u201d",
+        "\u2018test-key\u2019",
+    ],
+)
+def test_api_key_rejects_surrounding_quotes(
+    monkeypatch: pytest.MonkeyPatch,
+    api_key: str,
+) -> None:
+    monkeypatch.setenv("GOOGLE_API_KEY", api_key)
+
+    with pytest.raises(ConfigurationError, match="quote characters"):
+        load_settings(require_api_key=False)
+
+
 def test_invalid_log_level_is_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ANALYZE_AGENT_LOG_LEVEL", "verbose")
 

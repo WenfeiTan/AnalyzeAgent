@@ -34,7 +34,7 @@ async def generate_structured(
                 system_instruction=system_instruction,
                 temperature=0,
                 response_mime_type="application/json",
-                response_schema=schema,
+                response_json_schema=schema.model_json_schema(),
             ),
         )
         try:
@@ -61,4 +61,3 @@ async def generate_structured(
         f"Gemini structured output failed after {repair_attempts + 1} attempt(s): "
         f"{last_error}"
     ) from last_error
-

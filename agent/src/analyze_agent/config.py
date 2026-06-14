@@ -30,6 +30,8 @@ class Settings:
 
 def load_settings(*, require_api_key: bool) -> Settings:
     api_key = _optional_value("GOOGLE_API_KEY")
+    if api_key:
+        _validate_api_key(api_key)
     model = _optional_value("ANALYZE_AGENT_MODEL") or DEFAULT_MODEL
     log_level = (_optional_value("ANALYZE_AGENT_LOG_LEVEL") or DEFAULT_LOG_LEVEL).upper()
     database_path = Path(
@@ -75,6 +77,14 @@ def _optional_value(name: str) -> str | None:
         return None
     stripped = value.strip()
     return stripped or None
+
+
+def _validate_api_key(api_key: str) -> None:
+    quote_characters = {'"', "'", "\u2018", "\u2019", "\u201c", "\u201d"}
+    if api_key[0] in quote_characters or api_key[-1] in quote_characters:
+        raise ConfigurationError(
+            "GOOGLE_API_KEY must not include surrounding quote characters."
+        )
 
 
 def _positive_float(name: str, *, default: float) -> float:

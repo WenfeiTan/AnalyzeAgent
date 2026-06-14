@@ -50,6 +50,9 @@ def test_gemini_adapter_returns_typed_parsed_response() -> None:
 
     assert result == signals
     assert models.calls[0]["model"] == "gemini-test"
+    config = models.calls[0]["config"]
+    assert config.response_schema is None
+    assert config.response_json_schema == RequirementAnalysisSignals.model_json_schema()
 
 
 def test_gemini_adapter_rejects_empty_response() -> None:

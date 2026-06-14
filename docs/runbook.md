@@ -8,7 +8,11 @@ cd ../backend && uv sync
 cd ../frontend && pnpm install
 pnpm exec playwright install chromium
 cd ..
-export GOOGLE_API_KEY="..."
+cp .env.example .env
+# Edit .env and set GOOGLE_API_KEY without surrounding quote characters.
+set -a
+source .env
+set +a
 make agent-env-check
 make test
 make lint
@@ -49,7 +53,12 @@ workspace independently.
 | `ANALYZE_API_EVENT_POLL_SECONDS` | `0.05` | SSE polling interval |
 | `VITE_ANALYZE_API_BASE_URL` | `http://localhost:8000` | Frontend Backend URL |
 
-Never commit a populated `.env` file or print `GOOGLE_API_KEY`.
+`make dev` loads a repository-root `.env` when present. Direct `make
+agent-env-check`, `make agent-run`, and `make backend-run` commands still use
+the current environment.
+
+Never commit a populated `.env` file or print `GOOGLE_API_KEY`. Do not wrap the
+API key value in straight or curly quote characters.
 
 `make dev` sets an absolute repository-local database path unless
 `ANALYZE_AGENT_DATABASE_PATH` is already set. Direct commands should also use

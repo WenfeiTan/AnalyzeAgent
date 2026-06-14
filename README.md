@@ -31,8 +31,10 @@ make lint
 make frontend-e2e
 ```
 
-`.env.example` documents the supported settings. Export secrets through the
-runtime environment; do not commit a populated `.env` file.
+Copy `.env.example` to `.env` and replace the API key placeholder, or export
+the settings through the runtime environment. `make dev` automatically loads
+the repository-root `.env`. Do not commit a populated `.env` file, and do not
+wrap the API key value in quote characters.
 
 The dependency direction is `frontend -> backend -> agent`. The Agent remains an
 in-process package and is not a third HTTP service.
