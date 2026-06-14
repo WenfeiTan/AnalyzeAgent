@@ -5,15 +5,15 @@
 ## Current State
 
 - Last updated: 2026-06-14 Asia/Shanghai
-- Current branch: `codex/split-agent-backend-frontend`
-- Current HEAD: branch based on `main@acdc65f`
-- Current status: `completed`
-- Progress: Core scope `10/10` merged; Development Plan 2.0 `0/5` started
+- Current branch: `main`
+- Current HEAD: `90f8929`
+- Current status: `merged`
+- Progress: Core scope `10/10` merged; Development Plan 2.0 `1/5` merged
 - Current objective: Build a local interactive development and product demo UI.
-- Recently completed: Agent/Backend/Frontend workspace split and full regression.
-- Next action: Commit and squash merge `codex/split-agent-backend-frontend`.
+- Recently completed: `codex/split-agent-backend-frontend` merged into `main`.
+- Next action: Start `codex/workflow-stage-events`.
 - Blockers: None.
-- Working tree note: First Development Plan 2.0 branch is complete and ready to commit.
+- Working tree note: First Development Plan 2.0 branch is merged.
 - Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
@@ -43,7 +43,7 @@
 
 | Order | Branch | Status | Summary |
 | --- | --- | --- | --- |
-| 1 | `codex/split-agent-backend-frontend` | `completed` | Reusable Agent package, Python Backend and TypeScript Frontend |
+| 1 | `codex/split-agent-backend-frontend` | `merged` | Reusable Agent package, Python Backend and TypeScript Frontend |
 | 2 | `codex/workflow-stage-events` | `pending` | Real application workflow stage events |
 | 3 | `codex/web-api-job-runtime` | `pending` | FastAPI jobs, SSE and history APIs |
 | 4 | `codex/interactive-demo-ui` | `pending` | React Initial, Update, History and result UI |
@@ -117,3 +117,5 @@
   verification passed with 66 tests and Ruff.
 - Completed the three-workspace split; Agent 67 tests, Backend 3 tests and
   Frontend test/typecheck/lint/build all passed.
+- Squash merged `codex/split-agent-backend-frontend` into `main@90f8929`;
+  Development Plan 2.0 progress is 1/5.

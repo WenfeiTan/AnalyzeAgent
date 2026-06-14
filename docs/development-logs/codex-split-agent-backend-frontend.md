@@ -2,12 +2,12 @@
 
 ## State
 
-- Status: completed
+- Status: merged
 - Started: 2026-06-14 12:13 Asia/Shanghai
 - Completed: 2026-06-14 12:32 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 12:33 Asia/Shanghai
 - Base commit: `acdc65f`
-- Final commit:
+- Final commit: branch `d6583ba`; squash merge `90f8929`
 
 ## Objective
 
@@ -49,6 +49,14 @@ FastAPI Backend, and an independent React/TypeScript Frontend.
   environment; `pnpm-lock.yaml` is the reproducible Frontend lock.
 - Next: Commit and squash merge the branch into `main`.
 
+### 2026-06-14 12:33 Asia/Shanghai
+
+- Action: Squash merged the completed branch into `main`.
+- Result: Development Plan 2.0 progress is 1/5.
+- Evidence: `main@90f8929`.
+- Decision: Continue sequentially with workflow stage events.
+- Next: Create `codex/workflow-stage-events` from the latest `main`.
+
 ## Files Changed
 
 - Moved the existing Python project into `agent/`.
@@ -89,7 +97,7 @@ FastAPI Backend, and an independent React/TypeScript Frontend.
 
 ## Next Action
 
-- Commit and squash merge into `main`.
+- Start `codex/workflow-stage-events`.
 
 ## Completion Checklist
 
