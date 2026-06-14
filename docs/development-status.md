@@ -4,16 +4,16 @@
 
 ## Current State
 
-- Last updated: 2026-06-14 01:06 Asia/Shanghai
+- Last updated: 2026-06-14 Asia/Shanghai
 - Current branch: `main`
-- Current HEAD: latest implementation merge `074e725`; verify exact HEAD with Git
-- Current status: `completed`
-- Progress: `10/10` currently applicable branches merged
-- Current objective: Current executable development scope is complete.
-- Recently completed: `codex/observability-hardening` squash-merged into `main` at `074e725`.
-- Next action: Await the real vector-mcp contract or a new user-directed development scope.
+- Current HEAD: Development Plan 2.0 planning baseline; verify exact HEAD with Git
+- Current status: `planned`
+- Progress: Core scope `10/10` merged; Development Plan 2.0 `0/4` started
+- Current objective: Build a local interactive development and product demo UI.
+- Recently completed: Development Plan 2.0 scope and sequential branch design.
+- Next action: Review and commit the plan baseline, then start `codex/workflow-stage-events` when directed.
 - Blockers: None.
-- Working tree note: No implementation changes pending; final status metadata is ready to commit.
+- Working tree note: No Development Plan 2.0 implementation branch has started.
 - Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
@@ -38,6 +38,15 @@
 | 9 | `codex/adk-integration` | `merged` | ADK operations and injected retriever tool |
 | 10 | `codex/observability-hardening` | `merged` | Logging, tracing, resilience and security |
 | 11 | `codex/vector-mcp-adapter` | `deferred` | Awaiting real external service contract |
+
+## Development Plan 2.0 Branch Status
+
+| Order | Branch | Status | Summary |
+| --- | --- | --- | --- |
+| 1 | `codex/workflow-stage-events` | `pending` | Real application workflow stage events |
+| 2 | `codex/web-api-job-runtime` | `pending` | FastAPI jobs, SSE and history APIs |
+| 3 | `codex/interactive-demo-ui` | `pending` | Initial, Update, History and result UI |
+| 4 | `codex/demo-hardening-runbook` | `pending` | Demo scenarios, E2E verification and docs |
 
 ## Status Meanings
 
@@ -86,3 +95,12 @@
 - Completed observability and hardening with 66 passing tests.
 - Merged observability and hardening into `main` at `074e725`; progress is now 10/10.
 - Completed final clean-main regression; current executable scope is complete.
+
+### 2026-06-14
+
+- Confirmed the next scope is a local development and product demo prototype.
+- Confirmed Initial and Update workflows, real working-status stages, expandable
+  debug payloads, SQLite history, and explicitly labelled Fake Knowledge Base
+  scenarios.
+- Added `docs/development-plan-2.0.md` with four sequential development branches.
+- Kept `codex/vector-mcp-adapter` deferred pending the real external contract.
