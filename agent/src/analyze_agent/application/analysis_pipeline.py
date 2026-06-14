@@ -32,6 +32,7 @@ from analyze_agent.ports.reconstructor_errors import KnowledgeReconstructionErro
 from analyze_agent.ports.requirement_analyzer import RequirementAnalyzer
 from analyze_agent.ports.retriever_errors import KnowledgeRetrievalError
 from analyze_agent.security import has_prompt_injection_pattern
+from analyze_agent.workflow_events import WorkflowStage, WorkflowTracker
 
 _NORMALIZE_SEPARATOR = re.compile(r"[\s-]+")
 
@@ -60,11 +61,17 @@ class AnalysisPipeline:
         revision_id: UUID,
         requirement: str,
         change_summary: ChangeSummary | None = None,
+        tracker: WorkflowTracker | None = None,
     ) -> AnalyzeResponse:
         started_at = perf_counter()
         validate_english_text(requirement, field_name="requirement")
+        tracker = tracker or WorkflowTracker(
+            job_id=str(request_id),
+            request_id=request_id,
+        )
 
-        signals = await self._analyzer.analyze(requirement)
+        with tracker.stage(WorkflowStage.ANALYZING_REQUIREMENT):
+            signals = await self._analyzer.analyze(requirement)
         warnings: list[str] = []
         if has_prompt_injection_pattern(requirement):
             warnings.append(
@@ -72,10 +79,11 @@ class AnalysisPipeline:
                 "untrusted business input."
             )
         chunks: list[KnowledgeChunk] = []
-        try:
-            chunks = await self._retriever.search(requirement)
-        except KnowledgeRetrievalError as error:
-            warnings.append(str(error))
+        with tracker.stage(WorkflowStage.SEARCHING_KNOWLEDGE_BASE):
+            try:
+                chunks = await self._retriever.search(requirement)
+            except KnowledgeRetrievalError as error:
+                warnings.append(str(error))
         if any(has_prompt_injection_pattern(chunk.text) for chunk in chunks):
             warnings.append(
                 "Knowledge Base chunks contained instruction-like text and were "
@@ -83,76 +91,79 @@ class AnalysisPipeline:
             )
 
         reused_mappings = []
-        if chunks and self._knowledge_reconstructor is not None:
-            try:
-                reuse_signals = await self._knowledge_reconstructor.reconstruct(
-                    requirement=requirement,
-                    analyzed_requirement=signals.analyzed_requirement,
-                    chunks=chunks,
-                )
-                reused_mappings = build_reused_mappings(
-                    candidates=reuse_signals.candidates,
-                    chunks=chunks,
-                    negative_constraints=(
-                        signals.analyzed_requirement.negative_constraints
-                    ),
-                )
-            except KnowledgeReconstructionError as error:
-                warnings.append(str(error))
+        with tracker.stage(WorkflowStage.RECONSTRUCTING_MAPPINGS):
+            if chunks and self._knowledge_reconstructor is not None:
+                try:
+                    reuse_signals = await self._knowledge_reconstructor.reconstruct(
+                        requirement=requirement,
+                        analyzed_requirement=signals.analyzed_requirement,
+                        chunks=chunks,
+                    )
+                    reused_mappings = build_reused_mappings(
+                        candidates=reuse_signals.candidates,
+                        chunks=chunks,
+                        negative_constraints=(
+                            signals.analyzed_requirement.negative_constraints
+                        ),
+                    )
+                except KnowledgeReconstructionError as error:
+                    warnings.append(str(error))
 
-        clear_field_priority_start = len(reused_mappings) + 1
-        clear_fields = [
-            ClearFieldSuggestion(
-                name=field.name,
-                confidence=_required_confidence(
-                    ConfidenceSignals(
-                        kind=SuggestionKind.FIELD,
-                        explicit_requirement=True,
-                    )
+        with tracker.stage(WorkflowStage.CALCULATING_CONFIDENCE):
+            clear_field_priority_start = len(reused_mappings) + 1
+            clear_fields = [
+                ClearFieldSuggestion(
+                    name=field.name,
+                    confidence=_required_confidence(
+                        ConfidenceSignals(
+                            kind=SuggestionKind.FIELD,
+                            explicit_requirement=True,
+                        )
+                    ),
+                    origin=SuggestionOrigin.EXPLICIT_REQUIREMENT,
+                    priority=clear_field_priority_start + index,
+                    normalized_terms=field.normalized_terms
+                    or [_normalize_field(field.name)],
+                    evidence=[
+                        Evidence(
+                            type=EvidenceType.REQUIREMENT_SPAN,
+                            reference=field.name,
+                            excerpt=field.requirement_excerpt,
+                        )
+                    ],
+                    rationale="Field name is explicitly stated in the requirement.",
+                )
+                for index, field in enumerate(signals.clear_fields)
+            ]
+            keyword_priority_start = len(reused_mappings) + len(clear_fields) + 1
+            keywords = [
+                _build_keyword(
+                    keyword,
+                    priority=keyword_priority_start + index,
+                )
+                for index, keyword in enumerate(signals.keywords)
+            ]
+            response = AnalyzeResponse(
+                request_id=request_id,
+                requirement_id=requirement_id,
+                revision_id=revision_id,
+                analyzed_requirement=signals.analyzed_requirement,
+                clear_fields=clear_fields,
+                keywords=keywords,
+                reused_mappings=reused_mappings,
+                change_summary=change_summary,
+                warnings=[*signals.ambiguities, *warnings],
+                trace=ProcessingTrace(
+                    prompt_version=self._prompt_version,
+                    model=self._model,
+                    knowledge_base_queries=[requirement],
+                    processing_time_ms=max(
+                        0,
+                        round((perf_counter() - started_at) * 1000),
+                    ),
                 ),
-                origin=SuggestionOrigin.EXPLICIT_REQUIREMENT,
-                priority=clear_field_priority_start + index,
-                normalized_terms=field.normalized_terms
-                or [_normalize_field(field.name)],
-                evidence=[
-                    Evidence(
-                        type=EvidenceType.REQUIREMENT_SPAN,
-                        reference=field.name,
-                        excerpt=field.requirement_excerpt,
-                    )
-                ],
-                rationale="Field name is explicitly stated in the requirement.",
             )
-            for index, field in enumerate(signals.clear_fields)
-        ]
-        keyword_priority_start = len(reused_mappings) + len(clear_fields) + 1
-        keywords = [
-            _build_keyword(
-                keyword,
-                priority=keyword_priority_start + index,
-            )
-            for index, keyword in enumerate(signals.keywords)
-        ]
-        return AnalyzeResponse(
-            request_id=request_id,
-            requirement_id=requirement_id,
-            revision_id=revision_id,
-            analyzed_requirement=signals.analyzed_requirement,
-            clear_fields=clear_fields,
-            keywords=keywords,
-            reused_mappings=reused_mappings,
-            change_summary=change_summary,
-            warnings=[*signals.ambiguities, *warnings],
-            trace=ProcessingTrace(
-                prompt_version=self._prompt_version,
-                model=self._model,
-                knowledge_base_queries=[requirement],
-                processing_time_ms=max(
-                    0,
-                    round((perf_counter() - started_at) * 1000),
-                ),
-            ),
-        )
+        return response
 
 
 def _build_keyword(

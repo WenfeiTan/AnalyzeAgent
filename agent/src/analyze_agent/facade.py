@@ -13,6 +13,7 @@ from analyze_agent.domain.models import (
 )
 from analyze_agent.persistence.models import RequirementRevision
 from analyze_agent.runtime import AnalyzeAgentRuntime, build_runtime
+from analyze_agent.workflow_events import StageEventSink
 
 
 class AnalyzeAgent:
@@ -29,14 +30,28 @@ class AnalyzeAgent:
     async def analyze_initial(
         self,
         request: InitialAnalysisRequest,
+        *,
+        event_sink: StageEventSink | None = None,
+        job_id: str | None = None,
     ) -> AnalyzeResponse:
-        return await self._runtime.initial_service.analyze_initial(request)
+        return await self._runtime.initial_service.analyze_initial(
+            request,
+            event_sink=event_sink,
+            job_id=job_id,
+        )
 
     async def analyze_update(
         self,
         request: UpdatedAnalysisRequest,
+        *,
+        event_sink: StageEventSink | None = None,
+        job_id: str | None = None,
     ) -> AnalyzeResponse:
-        return await self._runtime.updated_service.analyze_update(request)
+        return await self._runtime.updated_service.analyze_update(
+            request,
+            event_sink=event_sink,
+            job_id=job_id,
+        )
 
     async def search_knowledge_base(self, text: str) -> list[KnowledgeChunk]:
         return await self._runtime.retriever.search(text)

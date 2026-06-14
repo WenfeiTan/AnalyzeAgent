@@ -27,6 +27,11 @@ from analyze_agent.domain.models import (
 )
 from analyze_agent.ports.requirement_repository import RequirementRepository
 from analyze_agent.ports.requirement_updater import RequirementUpdater
+from analyze_agent.workflow_events import (
+    StageEventSink,
+    WorkflowStage,
+    WorkflowTracker,
+)
 
 
 class UpdatedAnalysisService:
@@ -44,21 +49,35 @@ class UpdatedAnalysisService:
     async def analyze_update(
         self,
         request: UpdatedAnalysisRequest,
+        *,
+        event_sink: StageEventSink | None = None,
+        job_id: str | None = None,
     ) -> AnalyzeResponse:
-        if request.supplemental_information:
-            validate_english_text(
-                request.supplemental_information,
-                field_name="supplemental_information",
-            )
-
-        latest = self._repository.get_latest_revision(request.requirement_id)
-        update = await self._updater.update(
-            previous_requirement=latest.full_requirement,
-            supplemental_information=request.supplemental_information,
-            feedback=request.search_feedback,
-            previous_output=latest.output_snapshot,
+        tracker = WorkflowTracker(
+            job_id=job_id or str(request.request_id),
+            request_id=request.request_id,
+            sink=event_sink,
         )
-        validate_english_text(update.full_requirement, field_name="full_requirement")
+        with tracker.stage(WorkflowStage.VALIDATING_INPUT):
+            if request.supplemental_information:
+                validate_english_text(
+                    request.supplemental_information,
+                    field_name="supplemental_information",
+                )
+
+        with tracker.stage(WorkflowStage.LOADING_REVISION):
+            latest = self._repository.get_latest_revision(request.requirement_id)
+        with tracker.stage(WorkflowStage.UPDATING_REQUIREMENT):
+            update = await self._updater.update(
+                previous_requirement=latest.full_requirement,
+                supplemental_information=request.supplemental_information,
+                feedback=request.search_feedback,
+                previous_output=latest.output_snapshot,
+            )
+            validate_english_text(
+                update.full_requirement,
+                field_name="full_requirement",
+            )
 
         changes = [
             *update.changes,
@@ -71,18 +90,30 @@ class UpdatedAnalysisService:
             revision_id=revision_id,
             requirement=update.full_requirement,
             change_summary=ChangeSummary(changes=changes),
+            tracker=tracker,
         )
-        _apply_feedback(response, request.search_feedback)
-        self._repository.append_revision(
-            requirement_id=request.requirement_id,
-            expected_base_revision_number=latest.revision_number,
-            full_requirement=update.full_requirement,
-            supplemental_information=request.supplemental_information,
-            analyzed_requirement=response.analyzed_requirement.model_dump(mode="json"),
-            changes=changes,
-            feedback=request.search_feedback,
-            output_snapshot=response.model_dump(mode="json"),
-        )
+        try:
+            _apply_feedback(response, request.search_feedback)
+        except Exception as error:
+            tracker.fail_once(
+                stage=WorkflowStage.CALCULATING_CONFIDENCE,
+                error=error,
+            )
+            raise
+        with tracker.stage(WorkflowStage.PERSISTING_REVISION):
+            self._repository.append_revision(
+                requirement_id=request.requirement_id,
+                expected_base_revision_number=latest.revision_number,
+                full_requirement=update.full_requirement,
+                supplemental_information=request.supplemental_information,
+                analyzed_requirement=response.analyzed_requirement.model_dump(
+                    mode="json"
+                ),
+                changes=changes,
+                feedback=request.search_feedback,
+                output_snapshot=response.model_dump(mode="json"),
+            )
+        tracker.complete()
         return response
 
 
@@ -250,4 +281,3 @@ def _feedback_target(feedback: SearchFeedback) -> str | None:
     if feedback.target_type is FeedbackTargetType.ATTRIBUTE and feedback.attribute:
         return feedback.attribute.attribute_id or feedback.attribute.attribute_name
     return None
-

@@ -27,6 +27,11 @@ from analyze_agent.domain.models import (
     UpdatedAnalysisRequest,
 )
 from analyze_agent.persistence.sqlite_repository import SQLiteRequirementRepository
+from analyze_agent.workflow_events import (
+    MemoryStageEventSink,
+    StageStatus,
+    WorkflowStage,
+)
 
 
 class StubAnalyzer:
@@ -104,6 +109,7 @@ def test_update_creates_complete_second_revision(
     repository: SQLiteRequirementRepository,
 ) -> None:
     initial = _create_initial(repository)
+    sink = MemoryStageEventSink()
     service = UpdatedAnalysisService(
         updater=StubUpdater(),
         pipeline=_pipeline(),
@@ -115,7 +121,9 @@ def test_update_creates_complete_second_revision(
             UpdatedAnalysisRequest(
                 requirement_id=initial.requirement_id,
                 supplemental_information="Include ADC entity country.",
-            )
+            ),
+            event_sink=sink,
+            job_id="update-job",
         )
     )
     history = repository.list_revisions(initial.requirement_id)
@@ -128,6 +136,21 @@ def test_update_creates_complete_second_revision(
         "Include ADC entity country."
     )
     assert response.change_summary is not None
+    assert [
+        event.stage
+        for event in sink.events
+        if event.status is StageStatus.COMPLETED
+    ] == [
+        WorkflowStage.VALIDATING_INPUT,
+        WorkflowStage.LOADING_REVISION,
+        WorkflowStage.UPDATING_REQUIREMENT,
+        WorkflowStage.ANALYZING_REQUIREMENT,
+        WorkflowStage.SEARCHING_KNOWLEDGE_BASE,
+        WorkflowStage.RECONSTRUCTING_MAPPINGS,
+        WorkflowStage.CALCULATING_CONFIDENCE,
+        WorkflowStage.PERSISTING_REVISION,
+        WorkflowStage.COMPLETED,
+    ]
     assert response.change_summary.changes[0].action is ChangeAction.ADD
     assert history[1].output_snapshot == response.model_dump(mode="json")
 
@@ -221,4 +244,3 @@ def test_non_english_supplement_is_rejected_before_update(
         )
 
     assert len(repository.list_revisions(initial.requirement_id)) == 1
-

@@ -13,6 +13,13 @@ from analyze_agent.domain.models import (
 from analyze_agent.facade import AnalyzeAgent
 from analyze_agent.persistence.models import RequirementRevision
 from analyze_agent.runtime import AnalyzeAgentRuntime, build_runtime
+from analyze_agent.workflow_events import (
+    MemoryStageEventSink,
+    StageEvent,
+    StageEventSink,
+    StageStatus,
+    WorkflowStage,
+)
 
 __all__ = [
     "AnalyzeAgent",
@@ -21,11 +28,16 @@ __all__ = [
     "ConfigurationError",
     "InitialAnalysisRequest",
     "KnowledgeChunk",
+    "MemoryStageEventSink",
     "RequirementContext",
     "RequirementRevision",
     "SearchFeedback",
     "Settings",
+    "StageEvent",
+    "StageEventSink",
+    "StageStatus",
     "UpdatedAnalysisRequest",
+    "WorkflowStage",
     "build_runtime",
     "load_settings",
     "root_agent",
