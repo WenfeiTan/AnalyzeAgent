@@ -11,7 +11,7 @@
 - Progress: Core scope `10/10` merged; Development Plan 2.0 `0/5` started
 - Current objective: Build a local interactive development and product demo UI.
 - Recently completed: Development Plan 2.0 scope and sequential branch design.
-- Next action: Review and commit the plan baseline, then start `codex/workflow-stage-events` when directed.
+- Next action: Start `codex/split-agent-backend-frontend` when directed.
 - Blockers: None.
 - Working tree note: No Development Plan 2.0 implementation branch has started.
 - Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
@@ -43,7 +43,7 @@
 
 | Order | Branch | Status | Summary |
 | --- | --- | --- | --- |
-| 1 | `codex/split-frontend-backend` | `pending` | Independent Python Backend and TypeScript Frontend |
+| 1 | `codex/split-agent-backend-frontend` | `pending` | Reusable Agent package, Python Backend and TypeScript Frontend |
 | 2 | `codex/workflow-stage-events` | `pending` | Real application workflow stage events |
 | 3 | `codex/web-api-job-runtime` | `pending` | FastAPI jobs, SSE and history APIs |
 | 4 | `codex/interactive-demo-ui` | `pending` | React Initial, Update, History and result UI |
@@ -109,3 +109,7 @@
   Python/FastAPI `backend/`, connected only through versioned HTTP/SSE APIs.
 - Added `codex/split-frontend-backend` as the first branch; 2.0 now contains five
   applicable branches.
+- Refined the architecture into `agent/`, `backend/`, and `frontend/` with the
+  one-way dependency rule `frontend -> backend -> agent`.
+- Agent remains an in-process reusable Python package rather than a third HTTP
+  service; the first branch is now `codex/split-agent-backend-frontend`.

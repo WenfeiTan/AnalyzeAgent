@@ -43,13 +43,19 @@ Codex 在多轮对话和上下文压缩后恢复开发状态的主要依据。
 
 ### 2.1 技术栈
 
+Agent：
+
+- Python 3.11+。
+- Google ADK、Gemini adapters 和现有 application/domain layers。
+- SQLite：继续使用当前 requirement/revision repository。
+- 作为可独立测试和复用的 Python package/runtime，不启动额外网络服务。
+
 Backend：
 
 - Python 3.11+。
 - FastAPI：独立 JSON API 和 Server-Sent Events server。
 - Uvicorn：本地启动。
-- Google ADK、Gemini adapters 和现有 application/domain layers。
-- SQLite：继续使用当前 requirement/revision repository。
+- 只负责 transport、job orchestration、API errors 和 Agent composition。
 
 Frontend：
 
@@ -66,22 +72,31 @@ Frontend：
   展示。
 - Vite 提供独立且轻量的前端开发、构建和测试环境。
 - SSE 足以表达单向阶段状态，不需要 WebSocket。
+- `frontend -> backend -> agent` 是唯一允许的依赖方向。
+- Agent 不知道 Backend 或 Frontend；Backend 不知道 Frontend implementation。
 - Frontend 只依赖版本化 HTTP/SSE contract，不直接依赖 Python package、Gemini、
   SQLite 或 Retriever implementation。
 
 ### 2.2 仓库结构和解耦边界
 
-采用 monorepo 管理，但前后端是两个独立应用：
+采用 monorepo 管理三个独立 workspace。Agent 是可复用 Python package，Backend 和
+Frontend 是两个独立应用：
 
 ```text
 AnalyzeAgent/
-  backend/
+  agent/
     pyproject.toml
     uv.lock
     src/
       analyze_agent/
     tests/
     data/
+  backend/
+    pyproject.toml
+    uv.lock
+    src/
+      analyze_api/
+    tests/
   frontend/
     package.json
     package-lock.json
@@ -97,6 +112,13 @@ AnalyzeAgent/
 
 边界规则：
 
+- Agent 拥有 domain models、confidence rules、application workflows、ADK entrypoint、
+  Gemini adapters、Retriever ports/adapters、SQLite revisions、logging 和 resilience。
+- Agent 不导入 FastAPI，不定义 HTTP route、CORS、SSE 或 Web job state。
+- Backend 将 Agent 作为明确版本的 Python dependency，只通过 Agent public facade
+  调用，不直接导入 `application/`、`domain/`、`ports/` 或 adapter implementation。
+- Backend 拥有 FastAPI routes、API request/response DTO mapping、job registry、SSE
+  transport、CORS 和 Web-specific error mapping。
 - Backend 不渲染 HTML，不托管 frontend build output，不引用 TypeScript source。
 - Frontend 不导入 Python 文件，不直接访问 SQLite，也不包含 Gemini 或 Retriever
   逻辑。
@@ -109,10 +131,13 @@ AnalyzeAgent/
 - Frontend 使用 OpenAPI 生成或校验 TypeScript API types，生成文件放在
   `frontend/src/api/generated/`，业务组件不得手写复制 Backend schema。
 - Root `Makefile` 只负责编排安装、测试和同时启动两个独立进程，不承载业务代码。
-- Backend 和 Frontend 可以分别安装、测试、启动和构建。
+- Agent、Backend 和 Frontend 可以分别安装和测试；Backend 和 Frontend 可以分别启动；
+  Frontend 可以独立构建。
+- 不创建 Agent HTTP service。未来 Asset Discovery orchestrator 可以直接使用 Agent
+  package，或在其自身部署边界内包装 Agent。
 
-现有 Python 工程将在独立分支中整体迁入 `backend/`。该迁移只改变工程布局和命令，
-不修改 Analyze Agent 行为。
+现有 Python 工程将在独立分支中整体迁入 `agent/`。Backend 和 Frontend 从空骨架开始，
+该迁移只改变工程布局和命令，不修改 Analyze Agent 行为。
 
 ### 2.3 运行结构
 
@@ -122,6 +147,7 @@ Browser
   -> versioned HTTP/SSE API
   -> FastAPI Backend
   -> Analysis Job Service
+  -> Analyze Agent public API
   -> InitialAnalysisService / UpdatedAnalysisService
   -> Gemini adapters
   -> KnowledgeBaseRetriever
@@ -135,8 +161,9 @@ Analysis Job Service
   -> Browser working-status timeline
 ```
 
-Frontend 和 Backend 分别运行。生产构建产物也不由 FastAPI 提供；若未来需要部署，由外部
-reverse proxy 或 Asset Discovery host 分别路由两者。
+只有 Frontend 和 Backend 分别运行；Agent 在 Backend 进程内作为 dependency 执行，不是
+第三个网络 hop。生产构建产物也不由 FastAPI 提供；若未来需要部署，由外部 reverse
+proxy 或 Asset Discovery host 分别路由 Frontend 和 Backend。
 
 ### 2.4 API key
 
@@ -301,25 +328,31 @@ UI 必须区分：
 
 ## 5. 顺序开发分支
 
-### 5.1 `codex/split-frontend-backend`
+### 5.1 `codex/split-agent-backend-frontend`
 
-目标：把仓库整理为互相独立的 Python Backend 和 TypeScript Frontend workspace。
+目标：把仓库整理为可复用 Python Agent package、Python Backend 和 TypeScript Frontend
+三个职责独立的 workspace。
 
 交付物：
 
-- 将现有 Python package、tests、`pyproject.toml` 和 `uv.lock` 迁入 `backend/`。
+- 将现有 Python package、tests、`pyproject.toml` 和 `uv.lock` 迁入 `agent/`。
+- 定义 Agent public facade 和 import surface，封装 runtime composition、Initial、
+  Update、history query 和 stage event injection。
+- 新建独立 `backend/` Python/FastAPI 工程骨架，并声明对本地 Agent package 的依赖。
 - 新建独立 `frontend/` React、Vite、TypeScript strict 工程骨架。
-- Frontend lint、typecheck 和 unit-test 基线。
-- 分离的 Backend/Frontend 安装、测试和启动命令。
+- Agent、Backend 和 Frontend 各自的 lint/test 基线。
+- 分离的 Agent/Backend/Frontend 安装与测试命令。
 - Root `Makefile` 仅提供统一编排命令。
 - 更新 `.gitignore`、`.env.example`、README 和开发日志路径说明。
 
 完成门槛：
 
 - Python 迁移前后的 66 个现有测试全部通过。
+- Agent 可独立安装和测试，且不依赖 FastAPI 或 Frontend。
+- Backend 可独立导入 Agent public API，不反向修改 Agent global runtime。
 - Frontend 可独立启动并显示不依赖 Backend implementation 的 shell 页面。
 - Frontend build、typecheck、lint 和基础测试通过。
-- Backend 不包含 frontend dependency，Frontend 不包含 Python dependency。
+- 代码依赖检查确认只有 `backend -> agent`，不存在反向或跨层 source import。
 
 ### 5.2 `codex/workflow-stage-events`
 
@@ -348,6 +381,7 @@ UI 必须区分：
 
 - FastAPI application factory。
 - `/api/v1` versioned API contract 和 OpenAPI document。
+- Agent public API 到 HTTP DTO 的显式 mapping layer。
 - Initial/Update job submission endpoints。
 - job state/result endpoint。
 - SSE stage event endpoint，支持断线后的 sequence replay。
@@ -360,6 +394,7 @@ UI 必须区分：
 完成门槛：
 
 - API 不依赖 ADK 对话层即可调用 application services。
+- Agent package 不依赖 FastAPI，也不感知 job ID、SSE 或 CORS。
 - 两个并发 job 使用不同 Fake KB 场景时不会串数据。
 - 已完成 job 可取得与 `AnalyzeResponse` 一致的 payload。
 - 缺少 API key、非法输入和 workflow error 返回稳定错误结构。
@@ -420,7 +455,7 @@ UI 必须区分：
 
 严格按以下顺序开发：
 
-1. `codex/split-frontend-backend`
+1. `codex/split-agent-backend-frontend`
 2. `codex/workflow-stage-events`
 3. `codex/web-api-job-runtime`
 4. `codex/interactive-demo-ui`
@@ -428,13 +463,21 @@ UI 必须区分：
 
 不建议并行，原因是：
 
-- Stage event 开发需要先完成 Backend 目录迁移。
+- Stage event 开发需要先完成 Agent 目录迁移和 public API 边界。
 - Web API 依赖稳定的 stage event contract。
 - UI 依赖稳定的 job、SSE 和 history API。
 - hardening 需要在完整用户路径存在后才能做有效端到端验证。
 - 单一 workspace 中并行会增加 dependency drift 和日志恢复成本。
 
 ## 7. 测试策略
+
+Agent 分支至少执行：
+
+```bash
+make agent-test
+make agent-lint
+git diff --check
+```
 
 Backend 分支至少执行：
 
@@ -456,7 +499,8 @@ git diff --check
 
 按分支增加：
 
-- Workspace split：Backend 全量 regression 和 Frontend scaffold smoke test。
+- Workspace split：Agent 全量 regression、Backend import boundary test 和 Frontend
+  scaffold smoke test。
 - Stage events：application unit tests 和失败路径测试。
 - Web API：FastAPI TestClient/HTTPX、SSE、并发隔离和错误 contract tests。
 - UI：Vitest/Testing Library、API contract 和 component behavior tests。
@@ -485,9 +529,11 @@ test 中使用用户环境中的 `GOOGLE_API_KEY`。
 - SQLite history 可用于选择和恢复 requirement。
 - Fake KB 场景清晰标注且可重复演示。
 - API key 仅来自环境变量。
-- Frontend 和 Backend 可独立安装、测试、启动和构建。
+- Agent、Backend 和 Frontend 可独立安装和测试。
+- Agent 是无 FastAPI 依赖的可复用 package，不是第三个网络服务。
 - Frontend 只通过版本化 HTTP/SSE API 访问 Backend。
-- Backend 不托管或引用 Frontend source/build output。
+- Backend 只通过 Agent public API 使用核心能力，不导入 Agent private modules。
+- Backend 不托管或引用 Frontend source/build output，Agent 不引用 Backend。
 - UI、API 和 application 层职责分离。
 - 5 个分支全部测试、记录、提交并 squash merge 回 `main`。
 - `development-status.md` 和 runbook 与代码事实一致。
