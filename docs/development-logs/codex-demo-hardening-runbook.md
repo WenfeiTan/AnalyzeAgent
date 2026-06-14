@@ -81,6 +81,15 @@ end-to-end regression coverage.
 - Decision: Run one final clean-main regression before closing the plan.
 - Next: Verify clean `main`.
 
+### 2026-06-14 13:36 Asia/Shanghai
+
+- Action: Ran final regression on the integrated mainline.
+- Result: All Development Plan 2.0 work is complete and verified.
+- Evidence: `main@34cba61`; Agent 71, Backend 17, Frontend 2 and Playwright 2
+  tests passed with lint, typecheck, production build and clean Git checks.
+- Decision: Close the sequential development plan.
+- Next: None.
+
 ## Files Changed
 
 - Packaged Agent demo resources and loader.
@@ -115,7 +124,7 @@ end-to-end regression coverage.
 
 ## Next Action
 
-- Run final clean-main regression.
+- None. Development Plan 2.0 is complete.
 
 ## Completion Checklist
 

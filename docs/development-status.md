@@ -6,14 +6,17 @@
 
 - Last updated: 2026-06-14 Asia/Shanghai
 - Current branch: `main`
-- Current HEAD: `0b57b11`
-- Current status: `merged`
+- Current HEAD: `34cba61` before this status commit
+- Current status: `complete`
 - Progress: Core scope `10/10` merged; Development Plan 2.0 `5/5` merged
-- Current objective: Final clean-main verification.
-- Recently completed: `codex/demo-hardening-runbook` merged into `main`.
-- Next action: Run final regression and confirm a clean working tree.
+- Current objective: Development Plan 2.0 complete.
+- Recently completed: Final clean-main regression.
+- Next action: None.
 - Blockers: None.
-- Working tree note: All Development Plan 2.0 branches are merged.
+- Working tree note: All Development Plan 2.0 branches are merged and verified.
+- Last verification: Agent 71 tests, Backend 17 tests, Frontend 2 tests,
+  Playwright 2 tests, Ruff, ESLint, TypeScript, production build and
+  `git diff --check` passed on integrated `main`.
 - Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
@@ -148,3 +151,5 @@
   and smoke verification.
 - Squash merged `codex/demo-hardening-runbook` into `main@0b57b11`;
   Development Plan 2.0 progress is 5/5.
+- Completed final clean-main regression at `main@34cba61`; all automated tests,
+  lint, typecheck, production build and Git checks passed.
