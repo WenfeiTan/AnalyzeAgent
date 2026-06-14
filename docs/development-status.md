@@ -5,15 +5,15 @@
 ## Current State
 
 - Last updated: 2026-06-14 Asia/Shanghai
-- Current branch: `codex/web-api-job-runtime`
-- Current HEAD: branch based on `main@320590a`
-- Current status: `completed`
-- Progress: Core scope `10/10` merged; Development Plan 2.0 `2/5` merged
+- Current branch: `main`
+- Current HEAD: `6b8ba6f`
+- Current status: `merged`
+- Progress: Core scope `10/10` merged; Development Plan 2.0 `3/5` merged
 - Current objective: Build a local interactive development and product demo UI.
-- Recently completed: Versioned job/SSE/history API and full regression.
-- Next action: Commit and squash merge `codex/web-api-job-runtime`.
+- Recently completed: `codex/web-api-job-runtime` merged into `main`.
+- Next action: Start `codex/interactive-demo-ui`.
 - Blockers: None.
-- Working tree note: Third Development Plan 2.0 branch is complete.
+- Working tree note: Third Development Plan 2.0 branch is merged.
 - Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
@@ -45,7 +45,7 @@
 | --- | --- | --- | --- |
 | 1 | `codex/split-agent-backend-frontend` | `merged` | Reusable Agent package, Python Backend and TypeScript Frontend |
 | 2 | `codex/workflow-stage-events` | `merged` | Real application workflow stage events |
-| 3 | `codex/web-api-job-runtime` | `completed` | FastAPI jobs, SSE and history APIs |
+| 3 | `codex/web-api-job-runtime` | `merged` | FastAPI jobs, SSE and history APIs |
 | 4 | `codex/interactive-demo-ui` | `pending` | React Initial, Update, History and result UI |
 | 5 | `codex/demo-hardening-runbook` | `pending` | Demo scenarios, E2E verification and docs |
 
@@ -129,3 +129,5 @@
   history and error contracts are implemented with focused tests.
 - Completed `codex/web-api-job-runtime`; Agent 70 tests, Backend 9 tests and all
   aggregate workspace checks passed.
+- Squash merged `codex/web-api-job-runtime` into `main@6b8ba6f`; Development Plan
+  2.0 progress is 3/5.

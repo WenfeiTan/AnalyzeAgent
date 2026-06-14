@@ -2,12 +2,12 @@
 
 ## State
 
-- Status: completed
+- Status: merged
 - Started: 2026-06-14 12:42 Asia/Shanghai
 - Completed: 2026-06-14 12:50 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 12:51 Asia/Shanghai
 - Base commit: `320590a`
-- Final commit:
+- Final commit: branch `17a3547`; squash merge `6b8ba6f`
 
 ## Objective
 
@@ -56,6 +56,14 @@ leaking Agent internals into the Backend.
   and documentation rather than implying durable execution.
 - Next: Commit and squash merge into `main`.
 
+### 2026-06-14 12:51 Asia/Shanghai
+
+- Action: Squash merged the branch into `main`.
+- Result: Development Plan 2.0 progress is 3/5.
+- Evidence: `main@6b8ba6f`.
+- Decision: Build the UI against the committed `/api/v1` OpenAPI contract.
+- Next: Create `codex/interactive-demo-ui`.
+
 ## Files Changed
 
 - Agent public history summary, history facade and demo agent factory.
@@ -87,7 +95,7 @@ leaking Agent internals into the Backend.
 
 ## Next Action
 
-- Commit and squash merge into `main`.
+- Start `codex/interactive-demo-ui`.
 
 ## Completion Checklist
 
