@@ -1,6 +1,6 @@
 .PHONY: agent-env-check agent-lint agent-run agent-test backend-lint backend-run \
 	backend-test frontend-build frontend-dev frontend-lint frontend-test \
-	frontend-typecheck lint test
+	frontend-typecheck generate-api-types lint test
 
 agent-env-check:
 	cd agent && .venv/bin/python -m analyze_agent
@@ -37,6 +37,11 @@ frontend-typecheck:
 
 frontend-build:
 	cd frontend && pnpm build
+
+generate-api-types:
+	backend/.venv/bin/python -m analyze_api.export_openapi frontend/openapi.json
+	cd frontend && pnpm exec openapi-typescript openapi.json \
+		-o src/api/generated/schema.ts
 
 test: agent-test backend-test frontend-test
 

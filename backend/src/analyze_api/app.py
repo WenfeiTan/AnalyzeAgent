@@ -36,6 +36,7 @@ from analyze_api.models import (
     JobSubmission,
     RequirementSummaryResponse,
     RevisionResponse,
+    StageEventResponse,
     UpdateJobRequest,
 )
 
@@ -133,7 +134,16 @@ def create_app(
             raise _http_exception(404, "job_not_found", "Job not found.")
         return record.response()
 
-    @app.get("/api/v1/jobs/{job_id}/events")
+    @app.get(
+        "/api/v1/jobs/{job_id}/events",
+        responses={
+            200: {
+                "model": StageEventResponse,
+                "description": "Server-Sent Events containing stage and job payloads.",
+                "content": {"text/event-stream": {}},
+            }
+        },
+    )
     async def stream_events(
         job_id: UUID,
         after: int = Query(default=0, ge=0),

@@ -8,7 +8,10 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True, slots=True)
 class ApiSettings:
-    allowed_origins: tuple[str, ...] = ("http://localhost:5173",)
+    allowed_origins: tuple[str, ...] = (
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    )
     max_jobs: int = 100
     max_events_per_job: int = 200
     event_poll_seconds: float = 0.05
@@ -19,7 +22,7 @@ class ApiSettings:
             item.strip()
             for item in os.getenv(
                 "ANALYZE_API_ALLOWED_ORIGINS",
-                "http://localhost:5173",
+                "http://localhost:5173,http://127.0.0.1:5173",
             ).split(",")
             if item.strip()
         )

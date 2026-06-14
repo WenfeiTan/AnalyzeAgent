@@ -7,7 +7,13 @@ from enum import StrEnum
 from typing import Any
 from uuid import UUID
 
-from analyze_agent import DemoKnowledgeScenario, SearchFeedback
+from analyze_agent import (
+    AnalyzeResponse,
+    DemoKnowledgeScenario,
+    SearchFeedback,
+    StageStatus,
+    WorkflowStage,
+)
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
@@ -66,7 +72,7 @@ class JobResponse(ApiModel):
     created_at: datetime
     updated_at: datetime
     request_payload: dict[str, Any]
-    result: dict[str, Any] | None = None
+    result: AnalyzeResponse | None = None
     error: ApiError | None = None
 
 
@@ -75,6 +81,19 @@ class ConfigurationResponse(ApiModel):
     model: str
     knowledge_base_provider: str = "fake"
     scenarios: list[DemoKnowledgeScenario]
+
+
+class StageEventResponse(ApiModel):
+    job_id: str
+    request_id: UUID
+    stage: WorkflowStage
+    status: StageStatus
+    sequence: int
+    timestamp: datetime
+    duration_ms: float | None = None
+    metadata: dict[str, str | int | float | bool | None] = Field(
+        default_factory=dict
+    )
 
 
 class RequirementSummaryResponse(ApiModel):

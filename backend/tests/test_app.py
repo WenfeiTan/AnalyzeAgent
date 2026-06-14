@@ -138,6 +138,20 @@ def test_health_and_versioned_openapi() -> None:
         assert client.get("/api/v1/openapi.json").status_code == 200
 
 
+def test_local_frontend_origins_are_allowed() -> None:
+    with _client() as client:
+        for origin in ("http://localhost:5173", "http://127.0.0.1:5173"):
+            response = client.options(
+                "/api/v1/configuration",
+                headers={
+                    "Origin": origin,
+                    "Access-Control-Request-Method": "GET",
+                },
+            )
+            assert response.status_code == 200
+            assert response.headers["access-control-allow-origin"] == origin
+
+
 def test_initial_job_returns_result_and_replayable_sse() -> None:
     with _client() as client:
         submission = client.post(

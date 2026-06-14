@@ -49,7 +49,7 @@ class JobRecord:
     updated_at: datetime
     request_payload: dict[str, Any]
     events: deque[StageEvent]
-    result: dict[str, Any] | None = None
+    result: AnalyzeResponse | None = None
     error: ApiError | None = None
     task: asyncio.Task[None] | None = field(default=None, repr=False)
 
@@ -239,7 +239,7 @@ class AnalysisJobService:
             )
         else:
             record.status = JobStatus.COMPLETED
-            record.result = response.model_dump(mode="json")
+            record.result = response
             record.updated_at = datetime.now(UTC)
 
     @staticmethod
