@@ -2,12 +2,12 @@
 
 ## State
 
-- Status: completed
+- Status: merged
 - Started: 2026-06-14 12:34 Asia/Shanghai
 - Completed: 2026-06-14 12:40 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 12:41 Asia/Shanghai
 - Base commit: `6e5c8b4`
-- Final commit:
+- Final commit: branch `0b79545`; squash merge `37c0989`
 
 ## Objective
 
@@ -55,6 +55,14 @@ workflows without coupling the Agent to HTTP or UI code.
   invocation-scoped channel.
 - Next: Commit and squash merge into `main`.
 
+### 2026-06-14 12:41 Asia/Shanghai
+
+- Action: Squash merged the branch into `main`.
+- Result: Development Plan 2.0 progress is 2/5.
+- Evidence: `main@37c0989`.
+- Decision: Use the event sink as the Backend job store input.
+- Next: Create `codex/web-api-job-runtime`.
+
 ## Files Changed
 
 - `agent/src/analyze_agent/workflow_events.py`
@@ -83,7 +91,7 @@ workflows without coupling the Agent to HTTP or UI code.
 
 ## Next Action
 
-- Commit and squash merge into `main`.
+- Start `codex/web-api-job-runtime`.
 
 ## Completion Checklist
 
