@@ -2,12 +2,12 @@
 
 ## State
 
-- Status: completed
+- Status: merged
 - Started: 2026-06-14 13:12 Asia/Shanghai
 - Completed: 2026-06-14 13:33 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 13:35 Asia/Shanghai
 - Base commit: `618cd03`
-- Final commit:
+- Final commit: branch `8c48ea1`; squash merge `0b57b11`
 
 ## Objective
 
@@ -73,6 +73,14 @@ end-to-end regression coverage.
   local prototype.
 - Next: Commit and squash merge into `main`.
 
+### 2026-06-14 13:35 Asia/Shanghai
+
+- Action: Committed and squash merged the final branch.
+- Result: Development Plan 2.0 progress is 5/5.
+- Evidence: Branch `8c48ea1`; `main@0b57b11`.
+- Decision: Run one final clean-main regression before closing the plan.
+- Next: Verify clean `main`.
+
 ## Files Changed
 
 - Packaged Agent demo resources and loader.
@@ -107,7 +115,7 @@ end-to-end regression coverage.
 
 ## Next Action
 
-- Commit and squash merge into `main`.
+- Run final clean-main regression.
 
 ## Completion Checklist
 

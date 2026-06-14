@@ -5,15 +5,15 @@
 ## Current State
 
 - Last updated: 2026-06-14 Asia/Shanghai
-- Current branch: `codex/demo-hardening-runbook`
-- Current HEAD: `618cd03`
-- Current status: `completed`
-- Progress: Core scope `10/10` merged; Development Plan 2.0 `4/5` merged
-- Current objective: Harden the complete local development and product demo.
-- Recently completed: Demo hardening implementation and full branch regression.
-- Next action: Merge `codex/demo-hardening-runbook` and verify clean `main`.
+- Current branch: `main`
+- Current HEAD: `0b57b11`
+- Current status: `merged`
+- Progress: Core scope `10/10` merged; Development Plan 2.0 `5/5` merged
+- Current objective: Final clean-main verification.
+- Recently completed: `codex/demo-hardening-runbook` merged into `main`.
+- Next action: Run final regression and confirm a clean working tree.
 - Blockers: None.
-- Working tree note: Final Development Plan 2.0 branch is ready to merge.
+- Working tree note: All Development Plan 2.0 branches are merged.
 - Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
@@ -47,7 +47,7 @@
 | 2 | `codex/workflow-stage-events` | `merged` | Real application workflow stage events |
 | 3 | `codex/web-api-job-runtime` | `merged` | FastAPI jobs, SSE and history APIs |
 | 4 | `codex/interactive-demo-ui` | `merged` | React Initial, Update, History and result UI |
-| 5 | `codex/demo-hardening-runbook` | `in_progress` | Demo scenarios, E2E verification and docs |
+| 5 | `codex/demo-hardening-runbook` | `merged` | Demo scenarios, E2E verification and docs |
 
 ## Status Meanings
 
@@ -146,3 +146,5 @@
 - Completed `codex/demo-hardening-runbook`; Agent 71, Backend 17, Frontend 2 and
   Playwright 2 tests passed with lint, build, OpenAPI, wheel, unified startup
   and smoke verification.
+- Squash merged `codex/demo-hardening-runbook` into `main@0b57b11`;
+  Development Plan 2.0 progress is 5/5.
