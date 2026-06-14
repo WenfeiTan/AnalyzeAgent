@@ -2,12 +2,12 @@
 
 ## State
 
-- Status: completed
+- Status: merged
 - Started: 2026-06-14 12:52 Asia/Shanghai
 - Completed: 2026-06-14 13:08 Asia/Shanghai
-- Merged:
+- Merged: 2026-06-14 13:11 Asia/Shanghai
 - Base commit: `b46d6f8`
-- Final commit:
+- Final commit: branch `253b5db`; squash merge `25b971f`
 
 ## Objective
 
@@ -62,6 +62,14 @@ debuggable Analyze Agent results.
   to the dedicated hardening branch.
 - Next: Commit and squash merge into `main`.
 
+### 2026-06-14 13:11 Asia/Shanghai
+
+- Action: Committed and squash merged the completed branch.
+- Result: Development Plan 2.0 progress is 4/5.
+- Evidence: Branch `253b5db`; `main@25b971f`.
+- Decision: Start hardening from the UI-integrated mainline.
+- Next: Create `codex/demo-hardening-runbook`.
+
 ## Files Changed
 
 - Backend OpenAPI export, typed job response and local CORS configuration.
@@ -94,7 +102,7 @@ debuggable Analyze Agent results.
 
 ## Next Action
 
-- Commit and squash merge into `main`.
+- Start `codex/demo-hardening-runbook`.
 
 ## Completion Checklist
 

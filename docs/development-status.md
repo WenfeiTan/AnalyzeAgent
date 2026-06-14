@@ -5,15 +5,15 @@
 ## Current State
 
 - Last updated: 2026-06-14 Asia/Shanghai
-- Current branch: `codex/interactive-demo-ui`
-- Current HEAD: `b46d6f8` plus uncommitted UI work
-- Current status: `completed`
-- Progress: Core scope `10/10` merged; Development Plan 2.0 `3/5` merged
-- Current objective: Build a local interactive development and product demo UI.
-- Recently completed: Interactive UI implementation and full branch regression.
-- Next action: Merge `codex/interactive-demo-ui`, then start demo hardening.
+- Current branch: `main`
+- Current HEAD: `25b971f`
+- Current status: `merged`
+- Progress: Core scope `10/10` merged; Development Plan 2.0 `4/5` merged
+- Current objective: Harden the complete local development and product demo.
+- Recently completed: `codex/interactive-demo-ui` merged into `main`.
+- Next action: Start `codex/demo-hardening-runbook`.
 - Blockers: None.
-- Working tree note: Interactive UI branch is ready to commit and merge.
+- Working tree note: Fourth Development Plan 2.0 branch is merged.
 - Last verification: `uv sync --locked --offline`, 66 tests, Ruff, env/smoke checks, ADK declarations, and `git diff --check` all passed on `main`.
 - Last verification: 56 tests passed; Ruff, diff, env, smoke, and ADK FunctionTool declaration checks passed.
 - Last verification: 54 tests passed; Ruff and diff checks passed.
@@ -46,7 +46,7 @@
 | 1 | `codex/split-agent-backend-frontend` | `merged` | Reusable Agent package, Python Backend and TypeScript Frontend |
 | 2 | `codex/workflow-stage-events` | `merged` | Real application workflow stage events |
 | 3 | `codex/web-api-job-runtime` | `merged` | FastAPI jobs, SSE and history APIs |
-| 4 | `codex/interactive-demo-ui` | `in_progress` | React Initial, Update, History and result UI |
+| 4 | `codex/interactive-demo-ui` | `merged` | React Initial, Update, History and result UI |
 | 5 | `codex/demo-hardening-runbook` | `pending` | Demo scenarios, E2E verification and docs |
 
 ## Status Meanings
@@ -139,3 +139,5 @@
 - Completed `codex/interactive-demo-ui`; Agent 70 tests, Backend 10 tests,
   Frontend 2 tests, lint, typecheck, production build, OpenAPI generation and
   live browser smoke all passed.
+- Squash merged `codex/interactive-demo-ui` into `main@25b971f`; Development
+  Plan 2.0 progress is 4/5.
