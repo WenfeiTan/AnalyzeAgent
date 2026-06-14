@@ -8,7 +8,7 @@
 - Current branch: `main`
 - Current HEAD: Development Plan 2.0 planning baseline; verify exact HEAD with Git
 - Current status: `planned`
-- Progress: Core scope `10/10` merged; Development Plan 2.0 `0/4` started
+- Progress: Core scope `10/10` merged; Development Plan 2.0 `0/5` started
 - Current objective: Build a local interactive development and product demo UI.
 - Recently completed: Development Plan 2.0 scope and sequential branch design.
 - Next action: Review and commit the plan baseline, then start `codex/workflow-stage-events` when directed.
@@ -43,10 +43,11 @@
 
 | Order | Branch | Status | Summary |
 | --- | --- | --- | --- |
-| 1 | `codex/workflow-stage-events` | `pending` | Real application workflow stage events |
-| 2 | `codex/web-api-job-runtime` | `pending` | FastAPI jobs, SSE and history APIs |
-| 3 | `codex/interactive-demo-ui` | `pending` | Initial, Update, History and result UI |
-| 4 | `codex/demo-hardening-runbook` | `pending` | Demo scenarios, E2E verification and docs |
+| 1 | `codex/split-frontend-backend` | `pending` | Independent Python Backend and TypeScript Frontend |
+| 2 | `codex/workflow-stage-events` | `pending` | Real application workflow stage events |
+| 3 | `codex/web-api-job-runtime` | `pending` | FastAPI jobs, SSE and history APIs |
+| 4 | `codex/interactive-demo-ui` | `pending` | React Initial, Update, History and result UI |
+| 5 | `codex/demo-hardening-runbook` | `pending` | Demo scenarios, E2E verification and docs |
 
 ## Status Meanings
 
@@ -102,5 +103,9 @@
 - Confirmed Initial and Update workflows, real working-status stages, expandable
   debug payloads, SQLite history, and explicitly labelled Fake Knowledge Base
   scenarios.
-- Added `docs/development-plan-2.0.md` with four sequential development branches.
+- Added `docs/development-plan-2.0.md` with sequential development branches.
 - Kept `codex/vector-mcp-adapter` deferred pending the real external contract.
+- Revised the plan to use an independent React/Vite/TypeScript `frontend/` and
+  Python/FastAPI `backend/`, connected only through versioned HTTP/SSE APIs.
+- Added `codex/split-frontend-backend` as the first branch; 2.0 now contains five
+  applicable branches.
